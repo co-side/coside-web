@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 
+import '@mdxeditor/editor/style.css'
 import "./globals.css";
 import theme from "@/styles/theme";
 import { Topbar } from "@/components/Topbar";
