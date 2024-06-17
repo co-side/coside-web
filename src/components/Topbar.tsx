@@ -20,6 +20,7 @@ export const Topbar = () => {
         position: "fixed",
         top: 0,
         backgroundColor: "#FFFFFF",
+        zIndex: 10,
       }}
     >
       <Image src="/theme-logo.svg" alt="Co-Side" width={174} height={40} />

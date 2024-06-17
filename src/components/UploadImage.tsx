@@ -28,8 +28,8 @@ const StyledUploadWrapper = styled('div')(({ theme }) => ({
     cursor: "pointer",
 
     "&.is-hover": {
-        borderColor: theme.palette.primary.main,
-        background: alpha(theme.palette.primary.main, 0.1),
+        borderColor: theme.palette.secondary.dark,
+        background: alpha(theme.palette.secondary.dark, 0.1),
     },
 
     input: {
