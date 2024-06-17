@@ -2,53 +2,53 @@
 
 import { createTheme } from "@mui/material/styles";
 
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   interface Theme {
     professionTags: {
-        pmBg: string,
-        pmOutline: string,
-        uiuxBg: string,
-        uiuxOutline: string,
-        uxBg: string,
-        uxOutline: string,
-        uiBg: string,
-        uiOutline: string,
-        frontEndBg: string,
-        frontEndOutline: string,
-        backEndBg: string,
-        backEndOutline: string,
-        uxrBg: string,
-        uxrOutline: string,
-        fullStackBg: string,
-        fullStackOutline: string,
-        othersBg: string,
-        othersOutline: string,
-        extraLightBlue: string,
+      pmBg: string;
+      pmOutline: string;
+      uiuxBg: string;
+      uiuxOutline: string;
+      uxBg: string;
+      uxOutline: string;
+      uiBg: string;
+      uiOutline: string;
+      frontEndBg: string;
+      frontEndOutline: string;
+      backEndBg: string;
+      backEndOutline: string;
+      uxrBg: string;
+      uxrOutline: string;
+      fullStackBg: string;
+      fullStackOutline: string;
+      othersBg: string;
+      othersOutline: string;
+      extraLightBlue: string;
     };
   }
 
   // allow configuration using `createTheme`
   interface ThemeOptions {
     professionTags?: {
-        pmBg?: string,
-        pmOutline?: string,
-        uiuxBg?: string,
-        uiuxOutline?: string,
-        uxBg?: string,
-        uxOutline?: string,
-        uiBg?: string,
-        uiOutline?: string,
-        frontEndBg?: string,
-        frontEndOutline?: string,
-        backEndBg?: string,
-        backEndOutline?: string,
-        uxrBg?: string,
-        uxrOutline?: string,
-        fullStackBg?: string,
-        fullStackOutline?: string,
-        othersBg?: string,
-        othersOutline?: string,
-        extraLightBlue?: string,
+      pmBg?: string;
+      pmOutline?: string;
+      uiuxBg?: string;
+      uiuxOutline?: string;
+      uxBg?: string;
+      uxOutline?: string;
+      uiBg?: string;
+      uiOutline?: string;
+      frontEndBg?: string;
+      frontEndOutline?: string;
+      backEndBg?: string;
+      backEndOutline?: string;
+      uxrBg?: string;
+      uxrOutline?: string;
+      fullStackBg?: string;
+      fullStackOutline?: string;
+      othersBg?: string;
+      othersOutline?: string;
+      extraLightBlue?: string;
     };
   }
 }
@@ -64,6 +64,9 @@ const theme = createTheme({
       main: "#BF8FFD",
       dark: "#9868D6",
       light: "#F1E7FF",
+    },
+    warning: {
+      main: "#ffe500"
     },
     common: {
       black: "#343434",
@@ -95,7 +98,25 @@ const theme = createTheme({
     othersBg: "#ECECEC",
     othersOutline: "#656565",
     extraLightBlue: "#F1F7FF",
-  }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "12px",
+        },
+      },
+    },
+    MuiFormControl: {
+      styleOverrides: {
+        root: {
+          ".MuiOutlinedInput-notchedOutline": {
+            borderRadius: "12px",
+          },
+        },
+      },
+    },
+  },
 });
 
 export default theme;
