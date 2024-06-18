@@ -1,8 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import styles from "./page.module.css";
 import { ProjectCard, ProjectCardProps } from "@/components/ProjectCard";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 
 const mockProjectCard: ProjectCardProps[] = [
 {
@@ -47,6 +49,24 @@ export default function Home() {
       <Grid container columns={{ xs: 1, sm: 1, md: 2, lg: 3 }} spacing={1}>
       {mockProjectCard.map((card) => <ProjectCard projectCard={card} key={card.title}/>)}
       </Grid>
+      <Box position="fixed" top="50%" right="12px">
+        <Button
+          LinkComponent={Link}
+          variant="contained"
+          href="/project/create"
+          color="warning"
+          startIcon={<AddIcon />}
+          sx={{
+            padding: "20px 37px",
+            borderRadius: "32px",
+            fontSize: "20px",
+            lineHeight: 1,
+            boxShadow: "4px 4px 12px rgba(0, 0, 0, 0.2)"
+          }}
+        >
+          發起專案
+        </Button>
+      </Box>
       </Box>
     </main>
   );
