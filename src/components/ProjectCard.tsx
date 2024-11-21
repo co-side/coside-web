@@ -51,7 +51,7 @@ export const ProjectCard = ({
     ));
 
   return (
-    <Grid item xs={1} sm={1} md={1} lg={1} spacing={1} >
+    <Grid item xs={1} sm={1} md={1} lg={1}>
     <Card
       className="project-card"
       sx={{ borderRadius: "20px", minWidth: "320px" }}
