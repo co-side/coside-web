@@ -10,11 +10,6 @@ interface FormControlContextType {
   resetForm: () => void;
   currentValidationSchema: any;
   handleSubmit: (values: FormValues, formikHelpers: any) => Promise<void>;
-  initialValues: FormValues;
-  formState: any;
-  setFormState: React.Dispatch<React.SetStateAction<any>>;
-  mkVariable: string;
-  setMkVariable: React.Dispatch<React.SetStateAction<string>>;
   imageType: string;
   previewImage: string;
   searchValue: string;

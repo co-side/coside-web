@@ -1,13 +1,14 @@
+// components/Form/StepDescription.tsx
+"use client";
+
 import { useFormikContext } from "formik";
 import { Box } from "@mui/material";
 import { FormValues } from "@/hooks/useFormControl";
-import { useFormControlContext } from "@/contexts/FormControlContext";
-import MDXEditor from "@/components/Form/MDXEditor";
+import { ForwardRefEditor } from "@/components/Editor/ForwardRefEditor";
 
 export default function StepDescription() {
-  const { touched, errors, setFieldValue } =
+  const { values, touched, errors, setFieldValue } =
     useFormikContext<FormValues>();
-  const formControl = useFormControlContext();
 
   return (
     <>
@@ -22,13 +23,11 @@ export default function StepDescription() {
       >
         請盡量將構想 <b>有架構的描述</b>，讓其他人更了解你的想法
       </Box>
-      {/* 取得Editor的值 */}
-      <MDXEditor
+      <ForwardRefEditor
         label="專案構想"
-        markdown={formControl.mkVariable}
+        markdown={values.MKContent}
         onChange={(markdown: string) => {
           setFieldValue("MKContent", markdown);
-          formControl.setMkVariable(markdown);
         }}
         helperText={touched.MKContent && errors?.MKContent}
         error={Boolean(touched.MKContent && errors?.MKContent)}

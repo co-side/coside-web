@@ -529,7 +529,7 @@ export default function UploadImage() {
               <ImageGrid
                 images={cosideDefaultImages}
                 showImageSrc={(item) =>
-                  `https://558f30e55fa7.ngrok.app/${item}`
+                  `https://coside-api.zeabur.app/${item}`
                 }
                 onImageClick={chooseImage}
                 activeIndex={formControl.activeCosideIndex}

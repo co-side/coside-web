@@ -1,31 +1,16 @@
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Box, Button } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useFormControlContext } from "@/contexts/FormControlContext";
-import CustomDialog from "@/components/Dialog/CustomDialog";
 
-export default function NavigationButtons() {
+export default function NavigationButtons({ onCancelAttempt }) {
   const formControl = useFormControlContext();
-  const router = useRouter();
-  const [openCancelDialog, setOpenCancelDialog] = useState(false);
 
   const handleCancelClick = () => {
     if (formControl.activeStep === 0) {
-      setOpenCancelDialog(true);
+      onCancelAttempt();
     } else {
       formControl.handlePrevious();
     }
-  };
-
-  const handleCancelConfirm = () => {
-    setOpenCancelDialog(false);
-    formControl.resetForm();
-    router.push("/");
-  };
-
-  const handleCancelClose = () => {
-    setOpenCancelDialog(false);
   };
 
   return (
@@ -66,22 +51,6 @@ export default function NavigationButtons() {
           下一步
         </Button>
       )}
-
-      <CustomDialog
-        themeColor="red"
-        open={openCancelDialog}
-        onClose={handleCancelClose}
-        title="確定要取消發布嗎？"
-        description="你當前所填寫的內容將全部消失"
-        buttons={[
-          { text: "我再想想", onClick: handleCancelClose, variant: "outline" },
-          {
-            text: "取消發布",
-            onClick: handleCancelConfirm,
-            variant: "fill",
-          },
-        ]}
-      />
     </Box>
   );
 }

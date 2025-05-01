@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import theme from "@/styles/theme";
 import { Box, Typography, useMediaQuery, useTheme, Avatar as MuiAvatar } from "@mui/material";
 import Image from "next/image";
@@ -19,6 +20,8 @@ export default function ProjectHeader({
 }) {
   const muiTheme = useTheme();
   const isBelowMd = useMediaQuery(muiTheme.breakpoints.down("md"));
+  const [imgSrc, setImgSrc] = useState(`https://coside-api.zeabur.app/${project.background_Path}`);
+
   return (
     <>
       <Box
@@ -31,11 +34,7 @@ export default function ProjectHeader({
         }}
       >
         <Image
-          src={
-            project.background_Path
-              ? `https://558f30e55fa7.ngrok.app/${project.background_Path}`
-              : `/banner_coside_1.png`
-          }
+          src={imgSrc}
           alt={project.name}
           fill
           sizes="100vw"
@@ -44,9 +43,8 @@ export default function ProjectHeader({
             borderRadius: "12px",
             border: `1px solid ${theme.figma.neutral[80]}`,
           }}
-          onError={(e) => {
-            e.currentTarget.src =
-              "/banner_coside_1.png";
+          onError={() => {
+            setImgSrc("/banner_coside_1.png");
           }}
           priority
         />
@@ -92,7 +90,7 @@ export default function ProjectHeader({
           >
             {project.creator.avatar ? (
               <MuiAvatar
-                src={`https://558f30e55fa7.ngrok.app/${project.creator.avatar}`}
+                src={`https://coside-api.zeabur.app/${project.creator.avatar}`}
                 alt={project.creator.name}
                 sx={{ width: 32, height: 32 }}
                 onError={(e) => {
@@ -350,7 +348,7 @@ export default function ProjectHeader({
               >
                 {project.creator.avatar ? (
                   <MuiAvatar
-                    src={`https://558f30e55fa7.ngrok.app/${project.creator.avatar}`}
+                    src={`https://coside-api.zeabur.app/${project.creator.avatar}`}
                     alt={project.creator.name}
                     sx={{ width: 24, height: 24 }}
                     onError={(e) => {

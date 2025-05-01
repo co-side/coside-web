@@ -1,3 +1,4 @@
+import { useState } from "react";
 import theme from "@/styles/theme";
 import { Box, Typography, Grid, useMediaQuery, useTheme } from "@mui/material"; // 引入 Grid
 import Image from "next/image";
@@ -7,6 +8,20 @@ import { ProjectTag } from "@/components/ProjectTag";
 const UserInfoProjectList = ({ creatorData }) => {
   const muiTheme = useTheme();
   const isBelowMd = useMediaQuery(muiTheme.breakpoints.down("md"));
+  const [imageSources, setImageSources] = useState(() => {
+    const initialState = {};
+    creatorData?.projects.forEach((project) => {
+      initialState[project.id] = `https://coside-api.zeabur.app/${project.background_Path}`;
+    });
+    return initialState;
+  });
+
+  const handleImageError = (projectId) => {
+    setImageSources((prev) => ({
+      ...prev,
+      [projectId]: "/banner_coside_1.png",
+    }));
+  };
 
   return (
     <Grid container rowSpacing="11px" columnSpacing="11px">
@@ -29,7 +44,7 @@ const UserInfoProjectList = ({ creatorData }) => {
               }}
             >
               <Image
-                src={`https://558f30e55fa7.ngrok.app/${project.background_Path}`}
+                src={imageSources[project.id]}
                 alt={project.name}
                 width={500}
                 height={isBelowMd ? 149 : 96}
@@ -40,10 +55,7 @@ const UserInfoProjectList = ({ creatorData }) => {
                   objectFit: "cover",
                   width: "100%",
                 }}
-                onError={(e) => {
-                  e.currentTarget.src =
-                    "/banner_coside_1.png";
-                }}
+                onError={() => handleImageError(project.id)}
               />
               <Box
                 sx={{

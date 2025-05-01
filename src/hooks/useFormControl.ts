@@ -37,16 +37,6 @@ export const useFormControl = (token: string) => {
   const { currentValidationSchema } = useFormValidation(activeStep);
   const { submitProject } = useProjectSubmission(token);
 
-  // Form state
-  const [formState, setFormState] = useState({
-    title: "",
-    titleType: "",
-    projectType: "",
-  });
-
-  // Editor state
-  const [mkVariable, setMkVariable] = useState("");
-
   // Image related states
   const [previewImage, setPreviewImage] = useState("");
   const [imageType, setImageType] = useState("upload");
@@ -57,32 +47,7 @@ export const useFormControl = (token: string) => {
   const [unsplashImages, setUnsplashImages] = useState<string[]>([]);
   const currentPage = useRef(1);
 
-  // Initial form values
-  const initialValues: FormValues = {
-    titleType: "",
-    projectType: "",
-    title: "",
-    projectDuration: "",
-    MKContent: "",
-    imageType: "upload",
-    bannerUpload: undefined,
-    bannerCoside: "",
-    bannerUnsplash: undefined,
-    partners: [
-      {
-        number: 1,
-        jobPosition: "",
-        otherJobPosition: "",
-        projectRequirement: "",
-        members: [""],
-      },
-    ],
-    submit: "",
-  };
-
   const resetForm = () => {
-    setFormState({ title: "", titleType: "", projectType: "" });
-    setMkVariable("");
     setPreviewImage("");
     setImageType("upload");
     setSearchValue("");
@@ -130,15 +95,6 @@ export const useFormControl = (token: string) => {
     // Form validation and submission
     currentValidationSchema,
     handleSubmit,
-    initialValues,
-
-    // Form state
-    formState,
-    setFormState,
-
-    // Editor state
-    mkVariable,
-    setMkVariable,
 
     // Image related states and handlers
     imageType,

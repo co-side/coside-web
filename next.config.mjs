@@ -13,7 +13,7 @@ const nextConfig = {
         hostname: "images.unsplash.com",
       },
     ],
-    domains: [`558f30e55fa7.ngrok.app`],
+    domains: [`coside-api.zeabur.app`],
   },
 };
 
