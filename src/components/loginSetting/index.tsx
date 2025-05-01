@@ -32,6 +32,7 @@ import useLoginStore from "@/stores/loginStore";
 
 import axios from "axios";
 import { userGetSelf } from "@/api/user";
+import { setToken } from "@/api/tokeSetting";
 
 const LoginSetting = () => {
   const steps = ["基本資料", "聯繫方式"];
@@ -40,6 +41,7 @@ const LoginSetting = () => {
   const email = params.get("email");
   const name = params.get("name"); 
   const settingToken = params.get("token");
+  setToken(settingToken);
 
   const { setUserInfo, token, isAuthenticated } = useLoginStore();
   const router = useRouter()

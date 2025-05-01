@@ -1,6 +1,10 @@
 "use client";
+import { useLoginDialog } from "@/contexts/LoginDialogContext"; // 開啟登入 dialog
+import { LoginDialog } from "@/components/Dialog/LoginDialog"; // 登入 dialog
 
-import { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
+
+import { useEffect, useState, useCallback, use } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { ProjectCard, ProjectCardProps } from "@/components/ProjectCard";
@@ -24,6 +28,10 @@ export default function Home() {
   const [initialLoaded, setInitialLoaded] = useState(false); // 新增狀態來追蹤初始載入是否完成
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const { openState, closeDialog, openDialog } = useLoginDialog();
+
+  const searchParams = useSearchParams();
+  const login = searchParams.get("login");
 
   const fetchData = useCallback(async (page: number) => {
     if (loading) return; // Prevent multiple simultaneous requests
@@ -91,6 +99,18 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, hasMore]);
 
+
+  useEffect(() => {
+    
+    if (login === "true") {
+      openDialog();
+      const params = new URLSearchParams(searchParams as any);
+      params.delete("login");
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.replaceState({}, "", newUrl);
+    }
+  },[login, searchParams, openDialog]);
+
   const handleFilterApply = (filters) => {
     // Reset page and fetch with new filters
     setProjects([]);
@@ -107,6 +127,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+      <LoginDialog open={openState} onClose={closeDialog} />
       <Box sx={{
         maxWidth: "1224px", width: "100%", flexGrow: 1,
         display: "flex",

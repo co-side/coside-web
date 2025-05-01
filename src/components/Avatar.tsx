@@ -20,6 +20,7 @@ import theme from "@/styles/theme";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import WebOutlinedIcon from '@mui/icons-material/WebOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import axios from "axios";
 
 const Avatar = () => {
   const { token, userInfo, clearUserInfo } = useLoginStore(); // 你自己的登入 store
@@ -56,8 +57,11 @@ const Avatar = () => {
     setDrawerOpen(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     clearUserInfo(); // 清除登入狀態
+    await axios.post("/api/tokenRemove", {}, { withCredentials: true })
+    // redirect 到首頁
+    router.push("/");
     handleClose();
   };
 

@@ -19,7 +19,6 @@ import {
   ListItemButton
 } from "@mui/material";
 import AnimatedHamburger from "./AnimatedHamburger";
-import { LoginDialogProvider } from "@/contexts/LoginDialogContext";
 import { usePathname } from "next/navigation";
 
 const Avatar = dynamic(() => import("./Avatar"), { ssr: false });
@@ -202,9 +201,7 @@ export const Topbar = () => {
 
           {/* Avatar */}
           <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "flex" }, ml: "auto" }}>
-            <LoginDialogProvider>
               <Avatar />
-            </LoginDialogProvider>
           </Box>
         </Toolbar>
       </Container>

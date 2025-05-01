@@ -2,6 +2,7 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { userGetSelf } from "@/api/user";
+import { setToken } from "@/api/tokeSetting";
 import useLoginStore from "@/stores/loginStore";
 
 export default function HandleToken() {
@@ -21,11 +22,10 @@ export default function HandleToken() {
     const init = async () => {
       const token = searchParams.get("token");
       if (!token) return;
+      await setToken(token);
 
       const userInfo = await userGetSelf(token); // 這裡打 API 拿自己資訊
-      console.log(userInfo.data, "userInfo"); // 確認 userInfo
       setUserInfo(token, userInfo.data); // 儲存進 store
-
       // 移除 token from URL
       router.replace(pathname);
     };
