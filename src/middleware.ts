@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   if(pathname === '/project/create'){
     try {
       const token = request.cookies.get('token');
-      const res = await axios.get(`https://coside-api.zeabur.app/user`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
         headers: { Authorization: token.value ? `Bearer ${token.value}` : "" },
       });
 
