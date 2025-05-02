@@ -2,7 +2,7 @@ import { IS_DEV, IS_SERVER } from '@/constant'
 
 export async function cookies() {
   if (!IS_SERVER) {
-    throw new Error('setToken can only be called on the server side')
+    throw new Error('cookies() can only be called on the server side')
   }
   const { cookies } = await import('next/headers')
   const cookieStore = await cookies()
@@ -20,12 +20,12 @@ export async function setToken({ accessToken, refreshToken }: SetTokenParams) {
     httpOnly: true,
     maxAge: 60 * 15, // 15分鐘
     path: '/',
-    secure: IS_DEV,
+    secure: !IS_DEV,
   })
   cookieStore.set('refresh_token', refreshToken, {
     httpOnly: true,
     maxAge: 60 * 60 * 24 * 7, // 7天
     path: '/',
-    secure: IS_DEV,
+    secure: !IS_DEV,
   })
 }

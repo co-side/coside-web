@@ -128,7 +128,7 @@ export function http(options: CreateHttpOptions = {}): HttpClient {
   return {
     request: async (config: AxiosRequestConfig) => {
       const { requestSchema, responseSchema, axiosOptions = {} } = options
-      if (requestSchema && !IS_DEV) {
+      if (requestSchema && IS_DEV) {
         const result = requestSchema.safeParse(config.data)
         if (result.success) {
           return result as unknown as AxiosRequestConfig['data']
@@ -138,7 +138,7 @@ export function http(options: CreateHttpOptions = {}): HttpClient {
         }
       }
       const response = await instance.request(deepMerge(axiosOptions, config))
-      if (responseSchema && !IS_DEV) {
+      if (responseSchema && IS_DEV) {
         const result = responseSchema.safeParse(response.data)
         if (result.success) {
           return result as unknown as AxiosResponse<z.infer<z.ZodAny>>

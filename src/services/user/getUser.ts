@@ -10,14 +10,10 @@ type GetUserResponseDTO = z.infer<ApiResource['responses'][200]>
 
 export const GET_USER_QUERY = ['getUser'] as const
 
-const fetchFn = (): Promise<GetUserResponseDTO> => {
-  return client.getUser()
-    .then((res) => {
-      if (res.status === 200) {
-        return res.body
-      }
-      return Promise.reject(new Error('Error fetching data'))
-    })
+const fetchFn = async (): Promise<GetUserResponseDTO> => {
+  const res = await client.getUser()
+  if (res.status === 200) return res.body
+  throw new Error(`getUser failed with status ${res.status}`)
 }
 
 const getQueryOptions = () => {

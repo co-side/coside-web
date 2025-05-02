@@ -26,7 +26,11 @@ export function deepMerge<T extends Record<any, any>>(...args: T[]): T {
 
   for (const obj of args) {
     for (const key in obj) {
-      if (isObject(obj[key])) {
+      if (Array.isArray(obj[key])) {
+        // For arrays, replace the entire array
+        output[key] = [...obj[key]]
+      }
+      else if (isObject(obj[key])) {
         if (!output[key] || !isObject(output[key])) {
           output[key] = {}
         }
