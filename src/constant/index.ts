@@ -44,3 +44,8 @@ export const duration = [
     { label: '3-6個月', value: '3-6個月' },
     { label: '6個月以上', value: '6個月以上' },
 ]
+
+
+export const API_SERVER_URL = process.env.NEXT_PUBLIC_API_URL
+export const IS_DEV = process.env.NODE_ENV === 'development'
+export const IS_SERVER = typeof window === 'undefined'
