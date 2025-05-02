@@ -9,14 +9,20 @@ async function handleRequest(request: NextRequest) {
   url.search = request.nextUrl.search;
   const token = request.cookies.get("token")?.value;
 
-  const res = await fetch(url.toString(), {
+  const options: RequestInit & { duplex?: 'half' } = {
     method: request.method,
     headers: {
       ...Object.fromEntries(request.headers.entries()),
       // Authorization: token ? `Bearer ${token}` : "",
     },
-    body: request.method !== "GET" ? request.body : null
-  });
+  };
+
+  if (request.method !== "GET") {
+    options.body = request.body;
+    options.duplex = 'half';
+  }
+
+  const res = await fetch(url.toString(), options);
 
   if (res.status === 401) {
     const redirectUrl = new URL("/?login=true", request.url);
