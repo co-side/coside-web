@@ -1,5 +1,5 @@
 import { initClient } from '@ts-rest/core'
-import { contract, defaultOptions } from '@/libs/http'
+import { contract, defaultOptions } from '@/libs/http/client'
 import { getUser } from './user/getUser'
 import { updateUser } from './user/updateUser'
 import { getUserById } from './user/getUserById'
