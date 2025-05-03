@@ -1,31 +1,47 @@
-import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError, Method } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios'
 import { InitClientArgs, initContract } from '@ts-rest/core'
 import { z } from 'zod'
 import { IS_DEV, IS_SERVER } from '@/constant'
 import { deepMerge } from '@/utils/deepMerge'
-import { CreateServerAxiosOptions, flattenAxiosConfigHeaders } from './common'
+import { CreateServerAxiosOptions, flattenAxiosConfigHeaders, getReferer } from './common'
 
 const createClientAxios = (options: CreateServerAxiosOptions = {}) => {
   const instance = axios.create({})
-  instance.interceptors.request.use(options.request)
-  instance.interceptors.response.use(options.response, options.fail)
+  if (options.request) {
+    instance.interceptors.request.use(options.request)
+  }
+  if (options.response) {
+    instance.interceptors.response.use(options.response)
+  }
+  if (options.fail) {
+    instance.interceptors.response.use(undefined, options.fail)
+  }
   instance.interceptors.request.use(
     async (config) => {
       if (IS_SERVER) {
         try {
-          const { headers } = await import('next/headers')
-          const referer = headers().get('referer')
-          const host = headers().get('x-forwarded-host')
-          const proto = headers().get('x-forwarded-proto')
-          if (referer) {
-            config.baseURL = referer
-          } 
-          if (host && proto) {
-            config.baseURL = `${proto}://${host}`
+          const { cookies, headers } = await import('next/headers')
+          let Authorization = null
+          const accessTokenByHeader = headers().get('Authorization')
+          if (accessTokenByHeader) {
+            Authorization = headers().get('Authorization')
+          }
+          const accessTokenByCookie = cookies().get('access_token')?.value
+          if (accessTokenByCookie) {
+            if (accessTokenByCookie) {
+              Authorization = `Bearer ${accessTokenByCookie}`
+            }
+          }
+          if (Authorization) {
+            config.headers['Authorization'] = Authorization
           }
         } catch {
-          //
+          // 
         }
+        const referer = await getReferer().catch(() => undefined)
+        if (referer) {
+          config.baseURL = referer
+        } 
       }
       return config
     }
@@ -59,6 +75,7 @@ export function http(options: CreateHttpOptions = {}): HttpClient {
         console.warn('requestSchema', result.error.format())
       }
     }
+    return config
   })
   instance.interceptors.response.use((response) => {
     const { responseSchema } = options
@@ -92,6 +109,9 @@ export const defaultOptions = {
         headers,
         data: body,
       })
+      .catch((error) => {
+        return Promise.reject(error)
+      })
       return {
         status: result.status,
         body: result.data,
@@ -99,16 +119,6 @@ export const defaultOptions = {
       }
     }
     catch (e: unknown) {
-      if (isAxiosError(e)) {
-        const { response } = e
-        if (response) {
-          return {
-            status: response.status,
-            body: response.data,
-            headers: new Headers(flattenAxiosConfigHeaders(method, response.headers)),
-          }
-        }
-      }
       throw e
     }
   },

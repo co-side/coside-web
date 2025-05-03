@@ -1,24 +1,23 @@
 catch (error:any) {
-      const errors: Record<string, any> = {};
-      error.inner.forEach((e:any) => {
-        console.log("舊的", error);
-        console.log(e.path)
-        if(e.path.includes("members")) {
-          console.log('members 啦')
-          const index = e.path.split(".")
-          console.log(index)
-          for(let i = 0; i < index.length; i++) {
-            if(i < index.length - 1){
-              errors[index[i]] =   
-            }
-            errors[index[i]] = e.message;
-            
-          }
+  const errors: Record<string, any> = {};
+  error.inner.forEach((e:any) => {
+    console.log("舊的", error);
+    console.log(e.path)
+    if(e.path.includes("members")) {
+      console.log('members 啦')
+      const index = e.path.split(".")
+      console.log(index)
+      for(let i = 0; i < index.length; i++) {
+        if(i < index.length - 1){
+          errors[index[i]] =   
         }
-        errors[e.path] = e.message;
-        console.log(e)
-        
-      });
-      console.log("errors: ", errors);
-      return errors;
+        errors[index[i]] = e.message;
+      }
     }
+    errors[e.path] = e.message;
+    console.log(e)
+    
+  });
+  console.log("errors: ", errors);
+  return errors;
+}

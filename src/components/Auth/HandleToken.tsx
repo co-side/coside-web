@@ -20,14 +20,15 @@ export default function HandleToken() {
 
   useEffect(() => {
     const init = async () => {
-      const token = searchParams.get("token");
-      if (!token) return;
-      await setToken(token);
+      // const token = searchParams.get("token");
+      
+      // if (!token) return;
+      // await setToken(token);
 
-      const userInfo = await userGetSelf(token); // 這裡打 API 拿自己資訊
-      setUserInfo(token, userInfo.data); // 儲存進 store
-      // 移除 token from URL
-      router.replace(pathname);
+      // const userInfo = await userGetSelf(token); // 這裡打 API 拿自己資訊
+      // setUserInfo(token, userInfo.data); // 儲存進 store
+      // // 移除 token from URL
+      // router.replace(pathname);
     };
 
     if (isReady) {

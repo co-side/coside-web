@@ -21,9 +21,15 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import WebOutlinedIcon from '@mui/icons-material/WebOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import axios from "axios";
+import AuthProvider from "./AuthProvider";
+import { useGetUserQuery } from "@/services";
 
 const Avatar = () => {
-  const { token, userInfo, clearUserInfo } = useLoginStore(); // 你自己的登入 store
+  const { isLogin } = AuthProvider.useAuth();
+  const { data: userInfoResponse } = useGetUserQuery({ enabled: isLogin })
+  const userInfo = userInfoResponse?.data;
+  
+  const { clearUserInfo } = useLoginStore(); // 你自己的登入 store
   const { openState, closeDialog, openDialog } = useLoginDialog(); // 呼叫登入對話框
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
@@ -65,7 +71,7 @@ const Avatar = () => {
     handleClose();
   };
 
-  if (!token) {
+  if (!isLogin) {
     return (
       <>
         <MuiAvatar onClick={openDialog} sx={{ marginLeft: "48px", cursor: "pointer", bgcolor: theme.figma.neutral[90], color: "#656565", width: 48, height: 48, fontSize: "14px", lineHeight: "22px" }}>

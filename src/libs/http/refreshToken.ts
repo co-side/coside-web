@@ -1,26 +1,36 @@
 import axios, { AxiosError } from 'axios'
 import { cookies } from 'next/headers'
 import { API_SERVER_URL, IS_DEV } from '@/constant'
+import { jwtDecode } from '@/utils/jwt'
+
+function expToMaxAge(exp: number) {
+  const now = Math.floor(Date.now() / 1000)
+  return exp - now
+}
 
 interface SetTokenParams {
   accessToken: string
-  refreshToken: string
+  refreshToken?: string
 }
 
 export async function setToken({ accessToken, refreshToken }: SetTokenParams) {
+  const payload = jwtDecode(accessToken) as { exp: number }
   const cookieStore = await cookies()
   cookieStore.set('access_token', accessToken, {
     httpOnly: true,
-    maxAge: 60 * 15, // 15分鐘
+    maxAge: expToMaxAge(payload.exp),
     path: '/',
     secure: !IS_DEV,
   })
-  cookieStore.set('refresh_token', refreshToken, {
-    httpOnly: true,
-    maxAge: 60 * 60 * 24 * 7, // 7天
-    path: '/',
-    secure: !IS_DEV,
-  })
+  if (refreshToken) {
+    const payload = jwtDecode(refreshToken) as { exp: number }
+    cookieStore.set('refresh_token', refreshToken, {
+      httpOnly: true,
+      maxAge: expToMaxAge(payload.exp),
+      path: '/',
+      secure: !IS_DEV,
+    })
+  }
 }
 
 

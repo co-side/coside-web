@@ -1,5 +1,5 @@
 import { AxiosHeaders, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios"
-import { NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
 /**
  * @description
@@ -27,7 +27,7 @@ import { NextRequest } from "next/server"
  * }
  * ```
  */
-export async function nextRequestToAxiosConfig(request: NextRequest): Promise<AxiosRequestConfig> {
+export async function nextRequestToAxiosRequestConfig(request: NextRequest): Promise<AxiosRequestConfig> {
   const url = new URL(request.nextUrl)
   const headers = new AxiosHeaders()
   for (const [key, value] of request.headers.entries()) {
@@ -57,8 +57,24 @@ export async function nextRequestToAxiosConfig(request: NextRequest): Promise<Ax
     headers,
     data: body
   }
-  config.url = config.url.replace('/api', '')
   return config
+}
+
+export async function axiosResponseToNextResponse(response: AxiosResponse): Promise<NextResponse> {
+  const headers = new Headers()
+  for (const [key, value] of [...new AxiosHeaders(response.headers)]) {
+    headers.set(key, value.toString())
+  }
+  headers.delete('set-cookie')
+  headers.delete('cookie')
+  if (headers.get("Content-Type")?.includes("application/json")) {
+    return NextResponse.json(response.data)
+  }
+  return new NextResponse(response.data, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  })
 }
 
 /**
@@ -100,4 +116,21 @@ export interface CreateServerAxiosOptions {
   request?: (req: InternalAxiosRequestConfig) => Promise<InternalAxiosRequestConfig>
   response?: (res: AxiosResponse) => Promise<AxiosResponse>
   fail?: (error: unknown) => Promise<unknown>
+}
+
+export async function getReferer() {
+  const { headers } = await import('next/headers')
+  const referer = headers().get('referer')
+  const host = headers().get('host')
+  const forwardedHost = headers().get('x-forwarded-host')
+  const forwardedProto = headers().get('x-forwarded-proto')
+  if (referer) {
+    return referer
+  }
+  if (host) {
+    return `http://${host}`
+  } 
+  if (forwardedProto && forwardedHost) {
+    return `${forwardedProto}://${forwardedHost}`
+  }
 }

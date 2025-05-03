@@ -1,19 +1,19 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
-import { nextRequestToAxiosConfig } from "./libs/http/common";
-import { createServerAxios } from "./libs/http/server";
+import { httpProxy } from "./libs/http/server";
+import { API_SERVER_URL } from "./constant";
 
 export async function middleware(request: NextRequest) {
   // console.log("middleware", request.nextUrl.toString());
   const { pathname } = request.nextUrl;
   if (/^\/api\/(.*)/.test(pathname)) {
-    const res = await createServerAxios().request(await nextRequestToAxiosConfig(request))
-    .catch((error) => {
-      console.log('error', error.config.url);
-      return Promise.reject(new Error(error.message))
+    return await httpProxy(request, {
+      rewrite: (req) => ({
+        target: API_SERVER_URL,
+        changeOrigin: true,
+        path: req.nextUrl.pathname.replace(/^\/api/, '')
+      }),
     })
-    return NextResponse.json(res.data)
   }
   if (pathname === '/project/create') {
     try {
