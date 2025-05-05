@@ -4,10 +4,10 @@ import { Dialog, DialogContent, DialogTitle, Button, IconButton } from "@mui/mat
 import CloseIcon from '@mui/icons-material/Close';
 import styles from "./LoginDialog.module.scss";
 import Image from "next/image";
+
 export const LoginDialog = ({
   open, onClose
 }: { open: boolean, onClose: () => void }) => {
-
   const handleGoogleLogin = async () => {
     const params = new URLSearchParams({
       signUpRedirectUrl: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/loginsetting`,

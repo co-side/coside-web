@@ -1,49 +1,37 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Avatar as MuiAvatar,
   Menu,
   MenuItem,
-  Button,
   Typography,
   Box,
-  Drawer
+  Drawer,
+  useMediaQuery
 } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import useLoginStore from "@/stores/loginStore"; // 你的登入狀態 store
 import { useLoginDialog } from "@/contexts/LoginDialogContext"; // 開啟登入 dialog
 import { LoginDialog } from "@/components/Dialog/LoginDialog"; // 登入 dialog
 import theme from "@/styles/theme";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import WebOutlinedIcon from '@mui/icons-material/WebOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import axios from "axios";
 import AuthProvider from "./AuthProvider";
 import { useGetUserQuery } from "@/services";
+import { http } from "@/libs/http/client";
+import { useMutation } from "@tanstack/react-query";
 
 const Avatar = () => {
-  const { isLogin } = AuthProvider.useAuth();
+  const { isLogin ,fetchLogout } = AuthProvider.useAuth();
   const { data: userInfoResponse } = useGetUserQuery({ enabled: isLogin })
   const userInfo = userInfoResponse?.data;
-  
-  const { clearUserInfo } = useLoginStore(); // 你自己的登入 store
+
   const { openState, closeDialog, openDialog } = useLoginDialog(); // 呼叫登入對話框
   const router = useRouter();
-  const [isMobile, setIsMobile] = useState(false);
-
-  // 檢測螢幕大小
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 900); // 可以調整斷點
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  const isMobile = useMediaQuery('(max-width:900px)');
 
   // 選單狀態
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -63,13 +51,13 @@ const Avatar = () => {
     setDrawerOpen(false);
   };
 
-  const handleLogout = async() => {
-    clearUserInfo(); // 清除登入狀態
-    await axios.post("/api/tokenRemove", {}, { withCredentials: true })
-    // redirect 到首頁
-    router.push("/");
-    handleClose();
-  };
+  const { mutate: handleLogout } = useMutation({
+    mutationFn: fetchLogout,
+    onSuccess: () => {
+      closeDialog();
+      router.replace('/');
+    },
+  })
 
   if (!isLogin) {
     return (
@@ -175,7 +163,7 @@ const Avatar = () => {
         marginRight: "10px",
       }} />我的專案
     </MenuItem>,
-    <MenuItem onClick={handleLogout} sx={{
+    <MenuItem onClick={() => handleLogout()} sx={{
       borderRadius: "12px",
       color: theme.figma.status.darker_red,
       padding: "12px",

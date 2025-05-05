@@ -225,9 +225,6 @@ export default function Home() {
           </Button>
         </Box>
       </Box>
-      <Suspense>
-        <HandleToken />
-      </Suspense>
       <BackToTopButton />
     </main>
   );

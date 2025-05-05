@@ -8,6 +8,6 @@ export default async function TokenProvider({ children }: { children?: React.Rea
     prefetchGetUser({ enabled: !!accessToken }),
   ])
   return (
-    <AuthProvider isLogin={!!accessToken}>{children}</AuthProvider>
+    <AuthProvider accessToken={accessToken}>{children}</AuthProvider>
   )
 }

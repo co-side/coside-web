@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from "next/server"
 import axios, { isAxiosError } from "axios"
 import { IS_SERVER } from "@/constant"
-import { axiosResponseToNextResponse, CreateServerAxiosOptions, getReferer, nextRequestToAxiosRequestConfig } from "./common"
+import { CreateServerAxiosOptions, getReferer, requestToAxiosRequestConfig, axiosResponseToFetchResponse } from "./common"
 import { cookies, headers } from 'next/headers'
 import { onTokenExpired } from "./refreshToken"
 import { getQueryClient } from "../queryClient"
@@ -53,40 +52,41 @@ export const createServerAxios = (options: CreateServerAxiosOptions = {}) => {
   return instance
 }
 
-interface HttpProxyOptions extends CreateServerAxiosOptions {
-  rewrite?: (req: NextRequest) => string | ({
-    changeOrigin?: boolean,
-    target?: string,
-    path: string,
-  })
-}
+type RewriteHandler = (req: Request) => (string | ({
+  changeOrigin?: boolean,
+  target?: string,
+  path: string,
+}))
 
-async function rewrite(request: NextRequest, fn?: HttpProxyOptions['rewrite']) {
-  if (fn) {
-    const data = fn(request)
-    const { path, changeOrigin, target } = typeof data === 'string' ? { path: data } : data
-    if (/^https?:\/\//.test(path)) {
-      if (changeOrigin) {
-        const urlObj = new URL(path)
-        return new URL(target + urlObj.pathname + urlObj.search)
-      }
-      return new URL(path)
+async function rewrite(request: Request, fn: RewriteHandler) {
+  const data = fn(request)
+  const { path, changeOrigin, target } = typeof data === 'string' ? { path: data } : data
+  
+  if (/^https?:\/\//.test(path)) {
+    if (changeOrigin) {
+      const urlObj = new URL(path)
+      return new URL(target + urlObj.pathname + urlObj.search)
     }
-    if (target) {
-      return new URL(path, target)
-    }
-    const referer = await getReferer().catch(() => undefined)
-    if (referer) {
-      return new URL(path, referer)
-    } else {
-      return path
-    }
+    return new URL(path)
+  }
+  if (target) {
+    return new URL(path, target)
+  }
+  const referer = await getReferer().catch(() => undefined)
+  if (referer) {
+    return new URL(path, referer)
+  } else {
+    return path
   }
 }
 
-export async function httpProxy(request: NextRequest, options: HttpProxyOptions = {}) {
-  const config = await nextRequestToAxiosRequestConfig(request)
-  const url = await rewrite(request, options.rewrite)
+interface HttpProxyOptions {
+  rewrite?: RewriteHandler
+}
+
+export async function proxyMiddleware(request: Request, options: HttpProxyOptions = {}) {
+  const config = await requestToAxiosRequestConfig(request)
+  const url = rewrite ? await rewrite(request, options.rewrite) : config.url
   if (typeof url === 'string') {
     config.url = url
   } else {
@@ -97,16 +97,18 @@ export async function httpProxy(request: NextRequest, options: HttpProxyOptions 
     }
   }
   try {
-    const response = await createServerAxios(options).request(config)
-    return axiosResponseToNextResponse(response)
+    const axiosResponse = await createServerAxios().request(config)
+    const response = await axiosResponseToFetchResponse(axiosResponse)
+    return response
   } catch (error) {
     if (isAxiosError(error)) {
-      const response = error.response
-      if (response) {
-        return axiosResponseToNextResponse(response)
+      const axiosResponse = error.response
+      if (axiosResponse) {
+        const response =  axiosResponseToFetchResponse(axiosResponse)
+        return response
       }
     }
-    return new NextResponse("Internal Server Error", {
+    return new Response("Internal Server Error", {
       status: 500,
       statusText: error.message,
     })

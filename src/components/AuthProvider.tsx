@@ -1,43 +1,76 @@
 'use client'
-import { createContext, useContext, useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { createContext, useContext, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { http } from "@/libs/http/client";
-import { useGetUserQuery } from "@/services";
+import { useMutation } from "@tanstack/react-query";
+import { prefetchGetUser } from "@/services";
 
 const AuthContext = createContext({
   isLogin: false,
+  fetchLogout: (): Promise<unknown> => {
+    throw new Error("Function not implemented.");
+  },
 })
 
 interface AuthProviderProps {
-  isLogin: boolean
+  accessToken: string
   children: React.ReactNode
 }
 
-function AuthProvider({ isLogin, children }: AuthProviderProps) {
+function AuthProvider({ accessToken, children }: AuthProviderProps) {
   const pathname = usePathname()
   const searchEntities = useSearchParams()
   const searchParams = new URLSearchParams([...searchEntities])
   const token = searchParams.get('token')
+  const [isLogin, setIsLogin] = useState(!!accessToken)
+  const router = useRouter()
 
   useEffect(() => {
-    if (token) {
-      http().request({
-        url: '/self/api/login',
+    setIsLogin(!!accessToken)
+  }, [accessToken])
+
+  const { mutate: onLogin } = useMutation({
+    mutationFn: async () => {
+      await http().request({
+        url: '/api/auth/login',
         method: 'POST',
         data: {
           accessToken: token
         }
       })
-        .then(() => {
-          window.location.href = pathname
-        })
+      await prefetchGetUser()
+    },
+    onSuccess: () => {
+      setIsLogin(true)
+      router.replace(pathname);
     }
-  }, [token])
+  })
+
+  useEffect(() => {
+    const onMount = () => {
+      if (token) {
+        onLogin()
+      }
+    }
+    window.addEventListener('devicemotion', onMount)
+    return () => {
+      window.removeEventListener('devicemotion', onMount)
+    }
+  }, [onLogin, token])
 
   return (
     <AuthContext.Provider
       value={{
         isLogin,
+        fetchLogout: () => {
+          return http().request({
+            method: "POST",
+            url: "/api/auth/logout",
+          })
+          .then(() => {
+            setIsLogin(false)
+          })
+        }
       }}
     >
       {children}

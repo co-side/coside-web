@@ -1,9 +1,8 @@
 import { AxiosHeaders, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios"
-import { NextRequest, NextResponse } from "next/server"
 
 /**
  * @description
- * Convert NextRequest to AxiosRequestConfig
+ * Convert fetch API Request to AxiosRequestConfig
  * @example
  * Used to convert NextRequest to AxiosRequestConfig for axios request
  * ```ts
@@ -11,7 +10,7 @@ import { NextRequest, NextResponse } from "next/server"
  * import axios from 'axios'
  * 
  * export async function GET(req: NextRequest) {
- *   const response = await axios.request(nextRequestToAxiosConfig(req))
+ *   const response = await axios.request(requestToAxiosRequestConfig(req))
  *   return NextResponse.json(response.data)
  * }
  * ```
@@ -19,16 +18,16 @@ import { NextRequest, NextResponse } from "next/server"
  * Used to convert NextRequest to AxiosRequestConfig for project custom http client
  * ```ts
  * import { NextRequest, NextResponse } from 'next/server'
- * import { http, nextRequestToAxiosConfig } from '@/shared/http'
+ * import { http, requestToAxiosRequestConfig } from '@/shared/http'
  * 
  * export async function GET(req: NextRequest) {
- *   const response = await http().request(await nextRequestToAxiosConfig(req))
+ *   const response = await http().request(await requestToAxiosRequestConfig(req))
  *   return NextResponse.json(response.data)
  * }
  * ```
  */
-export async function nextRequestToAxiosRequestConfig(request: NextRequest): Promise<AxiosRequestConfig> {
-  const url = new URL(request.nextUrl)
+export async function requestToAxiosRequestConfig(request: Request): Promise<AxiosRequestConfig> {
+  const url = new URL(request.url)
   const headers = new AxiosHeaders()
   for (const [key, value] of request.headers.entries()) {
     headers.set(key, value)
@@ -60,7 +59,21 @@ export async function nextRequestToAxiosRequestConfig(request: NextRequest): Pro
   return config
 }
 
-export async function axiosResponseToNextResponse(response: AxiosResponse): Promise<NextResponse> {
+/**
+ * @description
+ * Convert AxiosResponse to fetch API Response
+ * @example
+ * Used to convert AxiosResponse to Response for Response
+ * ```ts
+ * import { http, axiosResponseToFetchResponse } from '@/shared/http'
+ * 
+ * export async function GET(request: NextRequest) {
+ *   const response = await http().request(request)
+ *   const jsonData = await axiosResponseToFetchResponse(response)
+ *   return NextResponse.json(jsonData)
+ * }
+ */
+export async function axiosResponseToFetchResponse(response: AxiosResponse): Promise<Response> {
   const headers = new Headers()
   for (const [key, value] of [...new AxiosHeaders(response.headers)]) {
     headers.set(key, value.toString())
@@ -68,9 +81,9 @@ export async function axiosResponseToNextResponse(response: AxiosResponse): Prom
   headers.delete('set-cookie')
   headers.delete('cookie')
   if (headers.get("Content-Type")?.includes("application/json")) {
-    return NextResponse.json(response.data)
+    return Response.json(response.data)
   }
-  return new NextResponse(response.data, {
+  return new Response(response.data, {
     status: response.status,
     statusText: response.statusText,
     headers,

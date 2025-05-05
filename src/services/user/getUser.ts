@@ -26,9 +26,7 @@ const getQueryOptions = ({ enabled }: QueryOptions) => {
   return queryOptions({
     queryKey: GET_USER_QUERY,
     queryFn: () => {
-      if (!enabled) {
-        return null
-      }
+      if (enabled === false) return null
       return fetchFn() 
     }
   } as const)
@@ -41,6 +39,7 @@ export const useGetUserQuery = (options: QueryOptions = {}) => {
 export async function prefetchGetUser(options: QueryOptions = {}) {
   const queryClient = getQueryClient()
   const queryOptions = getQueryOptions(options)
+  queryOptions.staleTime = 0
   await queryClient.prefetchQuery(queryOptions)
   const result = queryClient.getQueryData(queryOptions.queryKey)
   return result
