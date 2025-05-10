@@ -6,31 +6,41 @@ import { getUser } from '@/resources/user/getUser'
 
 type ApiResource = typeof getUser
 
-type GetUserResponseDTO = z.infer<ApiResource['responses'][200]>
+export type GetUserResponseDTO = z.infer<ApiResource['responses'][200]>
 
 export const GET_USER_QUERY = ['getUser'] as const
 
-const fetchFn = async (): Promise<GetUserResponseDTO> => {
-  const res = await client.getUser()
-  if (res.status === 200) return res.body
-  throw new Error(`getUser failed with status ${res.status}`)
+const fetchFn = (): Promise<GetUserResponseDTO> => {
+  return client.getUser().then((res) => {
+    if (res.status === 200) return res.body
+    throw new Error(`fetch error: Status is not define, ${res.status} by getUser.`)
+  })
 }
 
-const getQueryOptions = () => {
+
+interface QueryOptions {
+  enabled?: boolean
+}
+
+const getQueryOptions = ({ enabled }: QueryOptions) => {
   return queryOptions({
     queryKey: GET_USER_QUERY,
-    queryFn: () => fetchFn(),
+    queryFn: () => {
+      if (enabled === false) return null
+      return fetchFn() 
+    }
   } as const)
 }
 
-export const useGetUserQuery = () => {
-  return useSuspenseQuery(getQueryOptions())
+export const useGetUserQuery = (options: QueryOptions = {}) => {
+  return useSuspenseQuery(getQueryOptions(options))
 }
 
-export async function prefetchGetUser() {
+export async function prefetchGetUser(options: QueryOptions = {}) {
   const queryClient = getQueryClient()
-  const options = getQueryOptions()
-  await queryClient.prefetchQuery(options)
-  const result = queryClient.getQueryData(options.queryKey)
+  const queryOptions = getQueryOptions(options)
+  queryOptions.staleTime = 0
+  await queryClient.prefetchQuery(queryOptions)
+  const result = queryClient.getQueryData(queryOptions.queryKey)
   return result
 }

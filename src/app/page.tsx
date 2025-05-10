@@ -2,11 +2,9 @@
 import { useLoginDialog } from "@/contexts/LoginDialogContext";
 import { LoginDialog } from "@/components/Dialog/LoginDialog";
 import { Suspense, useEffect, useState, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { ProjectCard, ProjectCardProps } from "@/components/ProjectCard";
-import HandleToken from "@/components/Auth/HandleToken";
 import FilterDropdownList from "@/components/FilterDropdownList";
 import BackToTopButton from "@/components/BackToTopButton";
 import { useMediaQuery, useTheme } from '@mui/material';
@@ -14,24 +12,6 @@ import { Box, Button, Grid, Typography, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { projectGetByFilter } from "@/api/project";
 import RedirectAlert from "@/components/RedirectAlert";
-
-function LoginHandler() {
-  const searchParams = useSearchParams();
-  const login = searchParams.get("login");
-  const { openDialog } = useLoginDialog();
-
-  useEffect(() => {
-    if (login === "true") {
-      openDialog();
-      const params = new URLSearchParams(searchParams as any);
-      params.delete("login");
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.replaceState({}, "", newUrl);
-    }
-  }, [login, searchParams, openDialog]);
-
-  return null;
-}
 
 export default function Home() {
   const [nowPage, setNowPage] = useState(1);
@@ -117,9 +97,6 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <Suspense fallback={<div>Loading...</div>}>
-        <LoginHandler />
-      </Suspense>
       <LoginDialog open={openState} onClose={closeDialog} />
       <Box sx={{
         maxWidth: "1224px",
@@ -246,9 +223,6 @@ export default function Home() {
           </Button>
         </Box>
       </Box>
-      <Suspense>
-        <HandleToken />
-      </Suspense>
       <BackToTopButton />
     </main>
   );

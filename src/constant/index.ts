@@ -49,3 +49,7 @@ export const duration = [
 export const API_SERVER_URL = process.env.NEXT_PUBLIC_API_URL
 export const IS_DEV = process.env.NODE_ENV === 'development'
 export const IS_SERVER = typeof window === 'undefined'
+
+export const AUTH_PAGES = [
+    '/loginsetting'
+  ]
