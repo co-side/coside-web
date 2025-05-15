@@ -31,7 +31,7 @@ function resolveReference(value, tokens) {
       }
       current = current[key];
     }
-    resolvedValue = current.$value; // Update resolvedValue for the next iteration
+    resolvedValue = current.value; // Update resolvedValue for the next iteration
   }
 
   return resolvedValue;
@@ -42,8 +42,8 @@ function transformTokens(tokens) {
 
   function processTokenSet(tokenSet, target) {
     for (const [key, value] of Object.entries(tokenSet)) {
-      if ("$value" in value) {
-        let resolvedValue = value.$value;
+      if ("value" in value) {
+        let resolvedValue = value.value;
         if (
           typeof resolvedValue === "string" &&
           resolvedValue.startsWith("{")
@@ -51,7 +51,7 @@ function transformTokens(tokens) {
           resolvedValue = resolveReference(resolvedValue, tokens);
         }
 
-        if (value.$type === "number") {
+        if (value.type === "number") {
           target[key] = `${resolvedValue}px`;
         } else {
           target[key] = resolvedValue;
