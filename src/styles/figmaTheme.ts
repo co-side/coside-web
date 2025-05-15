@@ -117,6 +117,7 @@ export const theme = {
   },
   "card": {
     "bg": "#ffffff",
+    "outline": "#dcdcdc",
     "radius": "12px"
   }
 } as const;
