@@ -6,6 +6,7 @@ import { Box, Typography, useMediaQuery, useTheme, Avatar as MuiAvatar } from "@
 import Image from "next/image";
 import { CharacterTag } from "@/components/CharacterTag";
 import { ProjectTag } from "@/components/ProjectTag";
+import { API_SERVER_URL } from "@/constant";
 
 const TEXT_MAP: Record<string, string> = {
   REQUIRE_TYPE: "專案類型",
@@ -90,7 +91,7 @@ export default function ProjectHeader({
           >
             {project.creator.avatar ? (
               <MuiAvatar
-                src={`https://coside-api.zeabur.app/${project.creator.avatar}`}
+                src={`${API_SERVER_URL}/${project.creator.avatar}`}
                 alt={project.creator.name}
                 sx={{ width: 32, height: 32 }}
                 onError={(e) => {
@@ -348,7 +349,7 @@ export default function ProjectHeader({
               >
                 {project.creator.avatar ? (
                   <MuiAvatar
-                    src={`https://coside-api.zeabur.app/${project.creator.avatar}`}
+                    src={`${API_SERVER_URL}/${project.creator.avatar}`}
                     alt={project.creator.name}
                     sx={{ width: 24, height: 24 }}
                     onError={(e) => {

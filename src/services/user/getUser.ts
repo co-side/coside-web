@@ -6,14 +6,14 @@ import { getUser } from '@/resources/user/getUser'
 
 type ApiResource = typeof getUser
 
-type GetUserResponseDTO = z.infer<ApiResource['responses'][200]>
+export type GetUserResponseDTO = z.infer<ApiResource['responses'][200]>
 
 export const GET_USER_QUERY = ['getUser'] as const
 
 const fetchFn = async (): Promise<GetUserResponseDTO> => {
   const res = await client.getUser()
   if (res.status === 200) return res.body
-  throw new Error(`getUser failed with status ${res.status}`)
+  throw res.body
 }
 
 const getQueryOptions = () => {
@@ -29,8 +29,13 @@ export const useGetUserQuery = () => {
 
 export async function prefetchGetUser() {
   const queryClient = getQueryClient()
-  const options = getQueryOptions()
-  await queryClient.prefetchQuery(options)
-  const result = queryClient.getQueryData(options.queryKey)
+  const queryOptions = getQueryOptions()
+  await queryClient.prefetchQuery(queryOptions)
+  const result = queryClient.getQueryData(queryOptions.queryKey)
   return result
+}
+
+export async function clearGetUser() {
+  const queryClient = getQueryClient()
+  queryClient.removeQueries({ queryKey: GET_USER_QUERY })
 }

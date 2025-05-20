@@ -14,6 +14,7 @@ import Link from "next/link";
 import { ProjectTag } from "./ProjectTag";
 import { CharacterTag } from "./CharacterTag";
 import useLoginStore from "@/stores/loginStore";
+import { API_SERVER_URL } from "@/constant";
 
 export interface ProjectCardProps {
   // 共有屬性
@@ -198,7 +199,7 @@ export const ProjectCard = ({
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       {project.creator.avatar ? (
                         <MuiAvatar
-                          src={`https://coside-api.zeabur.app/${project.creator.avatar}`}
+                          src={`${API_SERVER_URL}/${project.creator.avatar}`}
                           alt={project.creator.name}
                           sx={{
                             width: 24, height: 24,

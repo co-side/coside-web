@@ -32,7 +32,7 @@ const GetUserResponseDTOSchema = z.object({
  */
 export const getUser = {
   method: 'GET',
-  path: '/User',
+  path: '/user',
   responses: {
     200: GetUserResponseDTOSchema,
   },

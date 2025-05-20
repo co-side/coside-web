@@ -46,6 +46,17 @@ export const duration = [
 ]
 
 
-export const API_SERVER_URL = process.env.NEXT_PUBLIC_API_URL
+export const PUBLIC_DOMAIN_URL = process.env.NEXT_PUBLIC_DOMAIN_URL!
+export const API_SERVER_URL = process.env.NEXT_PUBLIC_API_URL!
 export const IS_DEV = process.env.NODE_ENV === 'development'
 export const IS_SERVER = typeof window === 'undefined'
+
+export const ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60
+export const REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24
+
+if (!PUBLIC_DOMAIN_URL) {
+    throw new Error(`The PUBLIC_DOMAIN_URL is not fount.`)
+}
+if (!API_SERVER_URL) {
+    throw new Error(`The API_SERVER_URL is not fount.`)
+}

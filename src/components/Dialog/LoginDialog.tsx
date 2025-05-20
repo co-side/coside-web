@@ -4,29 +4,18 @@ import { Dialog, DialogContent, DialogTitle, Button, IconButton } from "@mui/mat
 import CloseIcon from '@mui/icons-material/Close';
 import styles from "./LoginDialog.module.scss";
 import Image from "next/image";
+import { fetchPreLogin } from "@/services/auth";
+import { useMutation } from "@tanstack/react-query";
+
 export const LoginDialog = ({
   open, onClose
 }: { open: boolean, onClose: () => void }) => {
-
-  const handleGoogleLogin = async () => {
-
-    // try{
-    //     // body
-    //     const res = await axios.get('/api/signup-via-google', 
-    //     {
-    //         params: {
-    //             signUpRedirectUrl: "http://localhost:3000/loginsetting"
-    //         }
-    //     }
-    //     );
-    //     console.log(res);
-    // }catch(e) {
-    //     console.log(e)
-    // }
-    // https://8d20-13-115-215-106.ngrok-free.app
-    // https://139c-18-181-211-61.ngrok-free.app
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth-via-google?signUpRedirectUrl=${process.env.NEXT_PUBLIC_DOMAIN_URL}/loginsetting&signInRedirectUrl=${process.env.NEXT_PUBLIC_DOMAIN_URL}`;
-  }
+  const { mutateAsync: handleGoogleLogin } = useMutation({
+    mutationFn: () => fetchPreLogin(),
+    onSuccess: () => {
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth/google`;
+    }
+  })
 
   return (
     <Dialog open={open} onClose={() => { onClose() }} disableScrollLock classes={{ paper: styles.dialog }}
@@ -60,7 +49,7 @@ export const LoginDialog = ({
         <Button
           variant="outlined"
           className={styles.loginButton}
-          onClick={handleGoogleLogin}
+          onClick={() => handleGoogleLogin()}
         >
           <Image src="/SSOIcon.png" alt="Google Icon" width={24} height={24} className={styles.googleIcon} />
           使用 Google 登入

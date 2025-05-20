@@ -9,6 +9,7 @@ import Link from "next/link";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { userGetCreatorInfo } from "@/api/user";
 import useLoginStore from "@/stores/loginStore";
+import { API_SERVER_URL } from "@/constant";
 interface ProjectCardModalProps {
   creatorId: string;
   isOpen: boolean;
@@ -98,7 +99,7 @@ const ProjectCardModal = ({ creatorId, isOpen, onClose }: ProjectCardModalProps)
               <>
                 {creatorData.avatar ? (
                   <MuiAvatar
-                    src={`https://coside-api.zeabur.app/${creatorData.avatar}`}
+                    src={`${API_SERVER_URL}/${creatorData.avatar}`}
                     alt={creatorData.name}
                     sx={{
                       marginRight: "0.75rem",
