@@ -62,11 +62,15 @@ export async function POST(request: NextRequest) {
       path: '/',
       secure: !IS_DEV,
     })
+    const loginRedirectUrl = cookieStore.get('login_redirect_url')?.value
+    if (loginRedirectUrl) {
+      cookieStore.delete('login_redirect_url')
+    }
     return NextResponse.json({ 
       message: 'Login Success!',
       data: {
         isAlreadyUser: response.data.isAlreadyUser,
-        loginRedirectUrl: '/'
+        loginRedirectUrl: loginRedirectUrl || '/'
       }
      } satisfies LoginResponseDTO)
   } else {

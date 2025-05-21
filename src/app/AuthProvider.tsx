@@ -15,6 +15,7 @@ function AuthProvider({ accessToken, children }: AuthProviderProps) {
   const [isLogin, setIsLogin] = useState(!!accessToken)
   const router = useRouter()
   const { refetch: onRefetchUser, data: userData } = useGetUserQuery()
+  const user = userData?.data
 
   const { mutateAsync: onLogout } = useMutation({
     mutationFn: fetchLogout,
@@ -25,17 +26,18 @@ function AuthProvider({ accessToken, children }: AuthProviderProps) {
   })
 
   useEffect(() => {
-    if (userData.data) {
+    if (user) {
       return
     }
     if (isLogin) {
-      onRefetchUser().then((res) => {
-        if (!res.data) {
-          onLogout()
-        }
-      })
+      onRefetchUser()
+        .then((res) => {
+          if (!res.data?.data) {
+            onLogout()
+          }
+        })
     }
-  }, [])
+  }, [isLogin, onLogout, onRefetchUser, user])
 
   const { mutateAsync: onSignin } = useMutation({
     mutationFn: fetchLogin,

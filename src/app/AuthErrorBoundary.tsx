@@ -1,6 +1,5 @@
 'use client'
 import { isAxiosError } from "axios";
-import { useRouter } from "next/router";
 import { ErrorBoundary } from "react-error-boundary";
 import { isHttpError } from "@/libs/http/HttpError";
 import { fetchLogout } from "@/services/auth";
@@ -36,10 +35,12 @@ interface AuthErrorBoundaryProps {
 function AuthErrorBoundary({ children }: AuthErrorBoundaryProps) {
   const fallbackRender = ({ error }: { error: unknown }) => {
     if (isAxiosError(error)) {
+      console.log('AuthErrorBoundary', JSON.stringify(error, null, 2));
+      
       if (IS_SERVER) {
-        // onServerError(error)
+        onServerError(error)
       } else {
-        // onClientError(error)
+        onClientError(error)
       }
       return <div>{error.message}</div>
     }

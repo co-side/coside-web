@@ -102,6 +102,7 @@ interface ProfileFormProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onImagePathChange: (imagePath: string) => void;
   onPreviewImageChange: (imagePath: string) => void
+  signupToken: string
   values: ProfileFormData
   errors: { [K in keyof ProfileFormData]: boolean };
   helperTexts: { [K in keyof ProfileFormData]: string };
@@ -114,9 +115,9 @@ function ProfileForm({
   values,
   errors,
   helperTexts,
+  signupToken,
 }: ProfileFormProps) {
   const [fileError, setFileError] = useState('');
-  const searchParams = useSearchParams();
   const { setFieldValue } = useFormikContext()
   const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setFileError("");
@@ -142,7 +143,7 @@ function ProfileForm({
 
     setFieldValue("image", file);
     try {
-      const res = await fetchUpload({ file })
+      const res = await fetchUpload({ signupToken, file })
       onImagePathChange(res.data);
       setFieldValue("imgPath", res.data);
 
@@ -482,10 +483,10 @@ const DEFAULT_FORM: ProfileFormData & ContactFormData = {
 interface LoginSettingProps {
   signupName?: string
   signupEmail?: string
-  isRegister?: boolean
+  signupToken?: string
 }
 
-function LoginSetting({ signupName, signupEmail, isRegister }: LoginSettingProps) {
+function LoginSetting({ signupName, signupEmail, signupToken }: LoginSettingProps) {
   const steps = [
     {
       title: "個人資料",
@@ -526,6 +527,7 @@ function LoginSetting({ signupName, signupEmail, isRegister }: LoginSettingProps
   })
 
   useEffect(() => {
+    const isRegister = !!signupToken
     if (isRegister) {
       if (searchParams.get('name') || searchParams.get("email")) {
         router.replace('/auth/register')
@@ -533,7 +535,7 @@ function LoginSetting({ signupName, signupEmail, isRegister }: LoginSettingProps
     } else {
       router.replace('/')
     }
-  }, [isRegister, router])
+  }, [signupToken, router, searchParams])
 
   const onSubmit = async (values: ProfileFormData | ContactFormData) => {
     setFormData((prev) => ({ ...prev, ...values }));
@@ -591,6 +593,7 @@ function LoginSetting({ signupName, signupEmail, isRegister }: LoginSettingProps
                   errors={formatErrorMessages(errors, touched)}
                   helperTexts={formatHelperTexts(errors, touched)}
                   onChange={handleChange}
+                  signupToken={signupToken!}
                   onImagePathChange={(imagePath: string) => {
                     setFormData((prev) => ({ ...prev, imgPath: imagePath }));
                   }}

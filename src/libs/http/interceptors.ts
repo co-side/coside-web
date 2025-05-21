@@ -34,7 +34,7 @@ export function requestValidationPlugin(schema: z.ZodType) {
         return result as unknown as AxiosRequestConfig['data']
       }
       else {
-        console.warn('requestSchema', result.error.format())
+        console.warn('requestSchema', config.url, result.error.format())
       }
       return config
     })
@@ -49,7 +49,7 @@ export function responseValidationPlugin(schema: z.ZodType) {
         return result as unknown as AxiosResponse<z.infer<z.ZodAny>>
       }
       else {
-        console.warn('responseSchema', result.error.format())
+        console.warn('responseSchema', response.config.url, result.error.format())
       }
       return response
     })

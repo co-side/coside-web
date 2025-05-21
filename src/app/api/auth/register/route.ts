@@ -63,11 +63,14 @@ export async function POST(request: NextRequest) {
     path: '/',
     secure: !IS_DEV,
   })
-  const url = cookieStore.get('login_redirect_url')?.value
+  const loginRedirectUrl = cookieStore.get('login_redirect_url')?.value
+  if (loginRedirectUrl) {
+    cookieStore.delete('login_redirect_url')
+  }
   return NextResponse.json({
     massage: 'Register Success!',
     data: {
-      loginRedirectUrl: url || '/'
+      loginRedirectUrl: loginRedirectUrl || '/'
     }
   } satisfies RegisterResponseDTO)
 }

@@ -12,7 +12,7 @@ const RegisterPage = async () => {
       <LoginSetting
         signupName={signupName || ""}
         signupEmail={signupEmail || ""}
-        isRegister={!!signupToken}
+        signupToken={signupToken}
       />
     </Suspense>
   );
