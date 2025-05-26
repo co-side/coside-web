@@ -16,9 +16,11 @@ import {
 } from "@/services/project/getProjects";
 import FilterDropdownList, { FilterComponentProps } from "@/components/FilterDropdownList";
 import { useEffect, useRef, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
   const theme = useTheme();
+  const { isLogin } = useAuth();
   const { openState, closeDialog } = useLoginDialog();
   const { data: initProjects } = useGetProjectsFirstQuery();
   const [queryParams, setQueryParams] = useState<GetProjectsInfiniteQueryParams>({})
@@ -170,48 +172,50 @@ export default function Home() {
           )}
         </div>
 
-        <Box
-          position="fixed"
-          sx={{
-            bottom: { xs: "32px", md: "5vh" },
-            right: { xs: "32px", md: "4vw" },
-            zIndex: 999,
-          }}
-        >
-          <Button
-            LinkComponent={Link}
-            variant="contained"
-            href="/project/create"
-            color="warning"
+        {isLogin && (
+          <Box
+            position="fixed"
             sx={{
-              display: "flex",
-              alignItems: "center",
-              padding: { xs: "14px", md: "20px 33px" },
-              borderRadius: { xs: "50%", md: "40px" },
-              boxShadow: "4px 4px 12px rgba(0, 0, 0, 0.2)",
-              color: theme.figma.form.text_default,
-              bgcolor: theme.figma.Tertiary.yellow,
+              bottom: { xs: "32px", md: "5vh" },
+              right: { xs: "32px", md: "4vw" },
+              zIndex: 999,
             }}
           >
-            <AddIcon
+            <Button
+              LinkComponent={Link}
+              variant="contained"
+              href="/project/create"
+              color="warning"
               sx={{
-                width: { xs: "40px", md: "24px" },
-                height: { xs: "40px", md: "24px" },
-                marginRight: { xs: 0, md: "10px" },
-              }}
-            />
-            <Typography
-              sx={{
-                display: { xs: "none", md: "block" },
-                fontSize: "20px",
-                lineHeight: "24px",
-                fontWeight: "400",
+                display: "flex",
+                alignItems: "center",
+                padding: { xs: "14px", md: "20px 33px" },
+                borderRadius: { xs: "50%", md: "40px" },
+                boxShadow: "4px 4px 12px rgba(0, 0, 0, 0.2)",
+                color: theme.figma.form.text_default,
+                bgcolor: theme.figma.Tertiary.yellow,
               }}
             >
-              發起專案
-            </Typography>
-          </Button>
-        </Box>
+              <AddIcon
+                sx={{
+                  width: { xs: "40px", md: "24px" },
+                  height: { xs: "40px", md: "24px" },
+                  marginRight: { xs: 0, md: "10px" },
+                }}
+              />
+              <Typography
+                sx={{
+                  display: { xs: "none", md: "block" },
+                  fontSize: "20px",
+                  lineHeight: "24px",
+                  fontWeight: "400",
+                }}
+              >
+                發起專案
+              </Typography>
+            </Button>
+          </Box>
+        )}
       </Box>
       <BackToTopButton />
     </main>

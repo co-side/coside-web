@@ -31,11 +31,11 @@ export type FormValues = {
   submit: string;
 };
 
-export const useFormControl = (token: string) => {
+export const useFormControl = () => {
   const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
   const { currentValidationSchema } = useFormValidation(activeStep);
-  const { submitProject } = useProjectSubmission(token);
+  const { submitProject } = useProjectSubmission();
 
   // Image related states
   const [previewImage, setPreviewImage] = useState("");

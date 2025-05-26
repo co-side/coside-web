@@ -5,10 +5,9 @@ import { doValidate } from '../utils/validation';
 import { step2ValidationSchema } from './useFormValidation';
 import { FormValues } from './useFormControl';
 
-export const useProjectSubmission = (token: string) => {
+export const useProjectSubmission = () => {
   const uploadImageBeforeSubmit = async (
     formValues: FormValues,
-    token: string
   ) => {
     try {
       switch (formValues.imageType) {
@@ -22,7 +21,6 @@ export const useProjectSubmission = (token: string) => {
 
           const response = await axios.post(`/api/upload?type=images`, data, {
             headers: {
-              Authorization: `Bearer ${token}`,
               "Content-Type": "multipart/form-data",
             },
           });
@@ -98,7 +96,6 @@ export const useProjectSubmission = (token: string) => {
 
             const res = await axios.post(`/api/upload?type=images`, data, {
               headers: {
-                Authorization: `Bearer ${token}`,
                 "Content-Type": "multipart/form-data",
               },
             });
@@ -139,7 +136,7 @@ export const useProjectSubmission = (token: string) => {
       }
 
       // 2. Upload the image
-      const imgPath = await uploadImageBeforeSubmit(values, token);
+      const imgPath = await uploadImageBeforeSubmit(values);
 
       // 3. Transform members data
       if (!values.partners) {
@@ -171,7 +168,6 @@ export const useProjectSubmission = (token: string) => {
       // 5. Submit the project
       await axios.post(`/api/project`, bodyData, {
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });

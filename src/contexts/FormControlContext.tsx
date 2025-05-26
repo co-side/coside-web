@@ -29,8 +29,8 @@ interface FormControlContextType {
 
 const FormControlContext = createContext<FormControlContextType | undefined>(undefined);
 
-export const FormControlProvider: React.FC<{ children: React.ReactNode; token: string }> = ({ children, token }) => {
-  const formControl = useFormControl(token);
+export const FormControlProvider: React.FC<{ children: React.ReactNode; }> = ({ children }) => {
+  const formControl = useFormControl();
 
   return (
     <FormControlContext.Provider value={formControl}>
