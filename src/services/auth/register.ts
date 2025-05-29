@@ -18,7 +18,7 @@ export interface RegisterRequestDTO {
 }
 
 export interface RegisterResponseDTO {
-  massage: string
+  message: string
   data: {
     loginRedirectUrl: string
   }

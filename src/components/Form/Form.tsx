@@ -172,7 +172,7 @@ export default function Form() {
   const { token } = useLoginStore();
 
   return (
-    <FormControlProvider token={token}>
+    <FormControlProvider>
       <FormContent />
     </FormControlProvider>
   );

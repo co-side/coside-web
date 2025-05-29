@@ -40,7 +40,7 @@ export interface GetProjectsInfiniteQueryParams extends GetProjectRequestDTO {
 export const GET_PROJECTS_INFINITY_QUERY = ['getProjects', 'infinite'] as const
 
 export const useGetProjectsInfiniteQuery = (req: GetProjectsInfiniteQueryParams = {}) => {
-  const pageSize = req.size || PAGE_SIZE
+  const pageSize = req.pageSize || PAGE_SIZE
   return useInfiniteQuery({
     queryKey: GET_PROJECTS_INFINITY_QUERY,
     queryFn: (ctx) => {
