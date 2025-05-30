@@ -19,15 +19,17 @@ export const createServerAxios = () => {
   return instance
 }
 
-type RewriteHandler = (req: Request) => (string | ({
+
+interface RewriteResult {
   changeOrigin?: boolean,
   target?: string,
   path: string,
-}))
+}
+type RewriteHandler = (req: Request) => (string | RewriteResult)
 
 async function rewrite(request: Request, fn: RewriteHandler) {
   const data = fn(request)
-  const { path, changeOrigin, target } = typeof data === 'string' ? { path: data } : data
+  const { path, changeOrigin, target }: RewriteResult = typeof data === 'string' ? { path: data, } : data
   if (/^https?:\/\//.test(path)) {
     if (changeOrigin) {
       const urlObj = new URL(path)

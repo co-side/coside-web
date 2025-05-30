@@ -42,7 +42,7 @@ export const ForwardRefEditor = forwardRef<MDXEditorMethods, ForwardRefEditorPro
   <FormControl fullWidth={true} error={props.error}>
     <Wrapper>
       {props.label && <Label>{props.label}</Label>}
-      <EditorComponent {...props} editorRef={ref} />
+      <EditorComponent {...props as any} editorRef={ref} />
     </Wrapper>
     {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
   </FormControl>

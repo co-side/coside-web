@@ -141,7 +141,7 @@ export default function Home() {
             >
               {projects.map((project) => (
                 <Grid item xs={1} key={project.id}>
-                  <ProjectCard project={project} />
+                  <ProjectCard project={project as any} />
                 </Grid>
               ))}
             </Grid>

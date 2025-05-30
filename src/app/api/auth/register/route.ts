@@ -20,7 +20,7 @@ interface SignupResponseDTO {
   message: string
 }
 
-export const fetchSignup = async (data: SignupRequestDTO): Promise<SignupResponseDTO> => {
+const fetchSignup = async (data: SignupRequestDTO): Promise<SignupResponseDTO> => {
   if (!IS_SERVER) {
     throw new Error('This function can only be used in server side')
   }
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     cookieStore.delete('login_redirect_url')
   }
   return NextResponse.json({
-    massage: 'Register Success!',
+    message: 'Register Success!',
     data: {
       loginRedirectUrl: loginRedirectUrl || '/'
     }
