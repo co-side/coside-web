@@ -6,8 +6,11 @@ import { getProjects } from '@/resources/project/getProjects'
 
 type ApiResource = typeof getProjects
 
+type InferArray<T extends any[]> = T extends (infer U)[] ? U : never
+
 export type GetProjectRequestDTO = z.infer<ApiResource['query']>
 export type GetProjectsResponseDTO = z.infer<ApiResource['responses'][200]>
+export type ProjectModel = InferArray<GetProjectsResponseDTO['data']['projects']>
 
 export const GET_PROJECTS_QUERY = ['getProjects'] as const
 

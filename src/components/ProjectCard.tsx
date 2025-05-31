@@ -13,28 +13,9 @@ import Link from "next/link";
 
 import { ProjectTag } from "./ProjectTag";
 import { CharacterTag } from "./CharacterTag";
-import useLoginStore from "@/stores/loginStore";
 import { API_SERVER_URL } from "@/constant";
-
-export interface ProjectCardProps {
-  // 共有屬性
-  background_Path: string;
-  categories: string[];
-  duration: string;
-  id: string;
-  name: string;
-  roles: string[];
-  type: string;
-
-  // 用於 MyProjectCard
-  is_Creator?: boolean;
-
-  // 用於普通 ProjectCard
-  creator?: {
-    name: string;
-    avatar: string;
-  };
-}
+import { ProjectModel } from "@/services/project/getProjects";
+import { useGetUserQuery } from "@/services";
 
 const TEXT_MAP: Record<string, string> = {
   REQUIRE_POSITION: "徵求｜",
@@ -119,18 +100,22 @@ const VisibleCharacterTags = ({ roles }: { roles: string[] }) => {
   );
 };
 
+interface ProjectCardProps {
+  project: ProjectModel;
+  variant?: 'own' | 'homePage';
+}
+
 export const ProjectCard = ({
   project,
   variant,
-}: {
-  project: ProjectCardProps;
-  variant?: 'own' | 'homePage';
-}) => {
+}: ProjectCardProps) => {
+  const { data: user } = useGetUserQuery()
   const isMyProject = (variant || 'homePage') === 'own';
+  const is_Creator = project.creator.id === user.data?.id;
 
   // 計算連結目標
   const linkHref = isMyProject
-    ? `/project/${project.is_Creator ? project.id + "/edit" : project.id}`
+    ? `/project/${is_Creator ? project.id + "/edit" : project.id}`
     : `/project/${project.id}`;
 
   return (
@@ -156,7 +141,7 @@ export const ProjectCard = ({
           <CardMedia
             component="img"
             src={project.background_Path
-              ? `https://coside-api.zeabur.app/${project.background_Path}`
+              ? `${API_SERVER_URL}/${project.background_Path}`
               : "/banner_coside_1.png"}
             sx={{ height: "190px", width: "100%", borderBottom: `1px solid ${theme.figma.neutral[80]}` }}
             onError={(e) => {
@@ -176,7 +161,7 @@ export const ProjectCard = ({
                 <ProjectTag projectTag={project.type} />
 
                 {isMyProject ? (
-                  project.is_Creator ? (
+                  is_Creator ? (
                     <Typography sx={{
                       color: theme.figma.project_tags.sideproject_implement,
                       fontSize: "16px",
