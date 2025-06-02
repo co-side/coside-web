@@ -101,7 +101,7 @@ const VisibleCharacterTags = ({ roles }: { roles: string[] }) => {
   );
 };
 
-interface ProjectCardProps {
+export interface ProjectCardProps {
   project: ProjectModel;
   variant?: 'own' | 'homePage';
 }

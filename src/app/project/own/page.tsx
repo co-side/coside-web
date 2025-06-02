@@ -60,7 +60,7 @@ export default function MyProjects() {
           rowSpacing={{ xs: 2.5, md: 4 }}
           columnSpacing={3}
         >
-          {projects.map((project) => (
+          {projects.map(({ project }) => (
             <Grid item xs={1} key={project.id}>
               <ProjectCard project={project} variant="own" />
             </Grid>
