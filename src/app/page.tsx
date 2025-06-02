@@ -1,22 +1,26 @@
 "use client";
-import { useLoginDialog } from "@/contexts/LoginDialogContext";
-import { LoginDialog } from "@/components/Dialog/LoginDialog";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import styles from "./page.module.css";
-import { ProjectCard } from "@/components/ProjectCard";
-import BackToTopButton from "@/components/BackToTopButton";
 import { useTheme } from "@mui/material";
 import { Box, Button, Grid, Typography, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import RedirectAlert from "@/components/RedirectAlert";
+
 import {
   GetProjectsInfiniteQueryParams,
   useGetProjectsFirstQuery,
   useGetProjectsInfiniteQuery,
 } from "@/services/project/getProjects";
-import FilterDropdownList, { FilterComponentProps } from "@/components/FilterDropdownList";
-import { useEffect, useRef, useState } from "react";
+
 import { useAuth } from "@/contexts/AuthContext";
+
+import { useLoginDialog } from "@/contexts/LoginDialogContext";
+import { LoginDialog } from "@/components/Dialog/LoginDialog";
+import { ProjectCard } from "@/components/ProjectCard";
+import BackToTopButton from "@/components/BackToTopButton";
+import RedirectAlert from "@/components/RedirectAlert";
+import FilterDropdownList, { FilterComponentProps } from "@/components/FilterDropdownList";
+
+import styles from "./page.module.css";
 
 export default function Home() {
   const theme = useTheme();

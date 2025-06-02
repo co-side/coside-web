@@ -11,11 +11,12 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 
-import { ProjectTag } from "./ProjectTag";
-import { CharacterTag } from "./CharacterTag";
 import { API_SERVER_URL } from "@/constant";
 import { ProjectModel } from "@/services/project/getProjects";
 import { useGetUserQuery } from "@/services";
+
+import { ProjectTag } from "./ProjectTag";
+import { CharacterTag } from "./CharacterTag";
 
 const TEXT_MAP: Record<string, string> = {
   REQUIRE_POSITION: "徵求｜",

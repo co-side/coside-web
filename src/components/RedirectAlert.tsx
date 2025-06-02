@@ -4,13 +4,7 @@ import Image from 'next/image';
 import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 
-const ErrorPage = ({
-  themeColor,
-  imageSrc,
-  imageAlt,
-  title,
-  buttons = [],
-}: {
+interface ErrorPageProps {
   themeColor: 'purple' | 'blue';
   imageSrc: string;
   imageAlt: string;
@@ -20,7 +14,15 @@ const ErrorPage = ({
     onClick: () => void;
     variant: 'fill' | 'outline';
   }[];
-}) => {
+}
+
+function RedirectAlert({
+  themeColor,
+  imageSrc,
+  imageAlt,
+  title,
+  buttons = [],
+}: ErrorPageProps) {
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -122,4 +124,4 @@ const ErrorPage = ({
   );
 };
 
-export default ErrorPage;
+export default RedirectAlert;

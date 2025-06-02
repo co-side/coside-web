@@ -1,7 +1,7 @@
 'use client';
+import { useEffect, useState } from "react";
 import { Box, Fade } from "@mui/material";
 import theme from "@/styles/theme";
-import { useEffect, useState } from "react";
 
 const BackToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);

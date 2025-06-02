@@ -2,6 +2,7 @@ import theme from "@/styles/theme";
 import { Box } from "@mui/material";
 import LocalFireDepartmentOutlinedIcon from "@mui/icons-material/LocalFireDepartmentOutlined";
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
+
 interface ProjectTagProps {
   name: string;
   icon: JSX.Element;

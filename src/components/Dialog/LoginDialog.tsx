@@ -1,11 +1,13 @@
 'use client';
 
+import Image from "next/image";
 import { Dialog, DialogContent, DialogTitle, Button, IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import styles from "./LoginDialog.module.scss";
-import Image from "next/image";
-import { fetchPreLogin } from "@/services/auth";
 import { useMutation } from "@tanstack/react-query";
+
+import { fetchPreLogin } from "@/services/auth";
+
+import styles from "./LoginDialog.module.scss";
 
 export const LoginDialog = ({
   open, onClose

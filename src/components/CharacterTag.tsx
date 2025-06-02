@@ -1,6 +1,5 @@
 "use client";
 import theme from "@/styles/theme";
-import { jobPositionTag } from "@/constant";
 
 // Emerail: ready to remove
 const CHARACTER_STYLES_MAP: Record<string, Record<string, string>> = {
