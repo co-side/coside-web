@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { useFormControlContext } from "@/contexts/FormControlContext";
+import { useFormControlContext } from "@/app/project/create/FormControlContext";
 
 export default function NavigationButtons({ onCancelAttempt }) {
   const formControl = useFormControlContext();

@@ -1,5 +1,5 @@
 import Typography from "@mui/material/Typography";
-import Form from "@/components/Form/Form";
+import Form from "./Form/Form";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

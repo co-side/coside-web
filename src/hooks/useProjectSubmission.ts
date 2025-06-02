@@ -3,7 +3,7 @@ import axios from 'axios';
 import { FormikHelpers } from 'formik';
 import { doValidate } from '../utils/validation';
 import { step2ValidationSchema } from './useFormValidation';
-import { FormValues } from './useFormControl';
+import { FormValues } from '../app/project/create/useFormControl';
 
 export const useProjectSubmission = () => {
   const uploadImageBeforeSubmit = async (

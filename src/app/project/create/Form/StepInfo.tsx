@@ -2,9 +2,9 @@ import { useFormikContext } from "formik";
 import { TextField } from "@mui/material";
 import { Field } from "formik";
 import { projectType, titleType, duration } from "@/constant";
-import { FormValues } from "@/hooks/useFormControl";
-import UploadImage from "@/components/Form/UploadImage";
+import { FormValues } from "@/app/project/create/useFormControl";
 import Select from "@/components/Select";
+import UploadImage from "./UploadImage";
 
 export default function FormStepper() {
   const { values, handleChange, touched, errors } =

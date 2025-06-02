@@ -24,8 +24,8 @@ import CachedIcon from "@mui/icons-material/Cached";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { getPhotosByQuery } from "@/api/unsplash";
 import theme from "@/styles/theme";
-import { FormValues } from "@/hooks/useFormControl";
-import { useFormControlContext } from "@/contexts/FormControlContext";
+import { FormValues } from "@/app/project/create/useFormControl";
+import { useFormControlContext } from "@/app/project/create/FormControlContext";
 
 const StyledUploadWrapper = styled("div")(() => ({
   position: "relative",

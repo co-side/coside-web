@@ -5,8 +5,8 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import {
   FormControlProvider,
   useFormControlContext,
-} from "@/contexts/FormControlContext";
-import { FormValues } from "@/hooks/useFormControl";
+} from "@/app/project/create/FormControlContext";
+import { FormValues } from "@/app/project/create/useFormControl";
 import FormStepper from "./FormStepper";
 import StepInfo from "./StepInfo";
 import StepDescription from "./StepDescription";
@@ -169,8 +169,6 @@ function FormContent() {
 }
 
 export default function Form() {
-  const { token } = useLoginStore();
-
   return (
     <FormControlProvider>
       <FormContent />

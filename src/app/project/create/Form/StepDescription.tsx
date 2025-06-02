@@ -3,7 +3,7 @@
 
 import { useFormikContext } from "formik";
 import { Box } from "@mui/material";
-import { FormValues } from "@/hooks/useFormControl";
+import { FormValues } from "@/app/project/create/useFormControl";
 import { ForwardRefEditor } from "@/components/Editor/ForwardRefEditor";
 
 export default function StepDescription() {
