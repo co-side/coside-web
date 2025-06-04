@@ -1,18 +1,14 @@
-import Typography from "@mui/material/Typography";
-import Form from "./Form/Form";
 import type { Metadata } from "next";
+import CreateProject from "./CreateProject";
+import { prefetchGetProjects } from "@/services/project/getProjects";
 
 export const metadata: Metadata = {
   title: "Create Project",
 };
 
-export default function CreateProject() {
-  return (
-    <main style={{ padding: 16 }}>
-      <Typography variant="h2" fontSize={32} mt={24} mb={8} align="center">
-        發起專案
-      </Typography>
-      <Form />
-    </main>
-  );
+export default async function CreateProjectPage() {
+  await Promise.all([
+    prefetchGetProjects()
+  ])
+  return <CreateProject />;
 }
