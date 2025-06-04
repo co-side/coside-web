@@ -2,7 +2,7 @@ import { http } from "@/libs/http/client";
 
 interface UploadRequestDTO {
   file: File
-  signupToken: string
+  token?: string
 }
 
 interface UploadResponseDTO {
@@ -10,7 +10,7 @@ interface UploadResponseDTO {
   data: string
 }
 
-export function fetchUpload({ file, signupToken }: UploadRequestDTO): Promise<UploadResponseDTO> {
+export function fetchUpload({ file, token }: UploadRequestDTO): Promise<UploadResponseDTO> {
   const data = new FormData();
   data.append('file', file, file.name);
   return http().request({
@@ -18,7 +18,7 @@ export function fetchUpload({ file, signupToken }: UploadRequestDTO): Promise<Up
     method: 'POST',
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${signupToken}`
+      Authorization: token ? `Bearer ${token}` : undefined
     },
     data,
     params: { type: 'images' }

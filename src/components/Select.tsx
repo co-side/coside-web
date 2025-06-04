@@ -7,16 +7,16 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from '@mui/material/FormHelperText';
 import MuiSelect, { SelectChangeEvent } from "@mui/material/Select";
 
-interface Option {
-  label: string | number;
-  value: string | number;
+interface OptionType<Value extends string = string> {
+  label: string
+  value: Value;
 }
 
-interface SelectProps {
+interface SelectProps<Value extends string = string, Option extends OptionType<Value> = OptionType<Value>> {
   fullWidth?: boolean;
   label?: string;
   name?: string;
-  value?: string;
+  value?: Value;
   options?: Option[];
   color?: OverridableStringUnion<
     "primary" | "secondary" | "error" | "info" | "success" | "warning",
@@ -24,10 +24,10 @@ interface SelectProps {
   >;
   error?: boolean;
   helperText?: string;
-  onChange?: (event: SelectChangeEvent) => void;
+  onChange?: (event: SelectChangeEvent<Value>) => void;
 }
 
-export default function Select({
+function Select<Value extends string, Option extends OptionType<Value>>({
   fullWidth,
   label,
   name,
@@ -37,7 +37,7 @@ export default function Select({
   error,
   helperText,
   onChange,
-}: SelectProps) {
+}: SelectProps<Value, Option>) {
   const id = useId();
   const labelId = `${id}-label-id`;
 
@@ -48,9 +48,9 @@ export default function Select({
         labelId={labelId}
         name={name}
         color={color}
-        value={value}
         label={label}
         onChange={onChange}
+        value={value as any}
       >
         {Array.isArray(options) &&
           options.map((option) => (
@@ -63,3 +63,5 @@ export default function Select({
     </FormControl>
   );
 }
+
+export default Select;

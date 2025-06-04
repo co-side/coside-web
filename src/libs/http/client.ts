@@ -119,6 +119,8 @@ export const defaultOptions = {
       }
     }
     catch (error: unknown) {
+      console.log('defaultOptions', error);
+      
       if (isHttpError(error) && error.response) {
         return {
           status: error.response.status,
