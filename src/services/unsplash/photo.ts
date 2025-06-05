@@ -31,7 +31,7 @@ interface User {
   name: string
   first_name: string
   last_name: string
-  twitter_username: any
+  twitter_username: string | null
   portfolio_url: string
   bio: string
   location: string
@@ -68,8 +68,8 @@ interface ProfileImage {
 interface Social {
   instagram_username: string
   portfolio_url: string
-  twitter_username: unknown
-  paypal_email: unknown
+  twitter_username: string | null
+  paypal_email: string | null
 }
 
 export interface UnsplashData {
@@ -78,21 +78,21 @@ export interface UnsplashData {
   alternative_slugs: Record<AlternativeSlugKeys, string>
   created_at: string
   updated_at: string
-  promoted_at: unknown
+  promoted_at: string | null
   width: number
   height: number
   color: string
   blur_hash: string
-  description: unknown
-  alt_description: string
-  breadcrumbs: unknown[]
+  description: string | null
+  alt_description: string | null
+  breadcrumbs: Array<{title: string; slug: string; index: number}>
   urls: Urls
   links: Links
   likes: number
   liked_by_user: boolean
-  current_user_collections: any[]
-  sponsorship: any
-  topic_submissions: unknown
+  current_user_collections: Array<{id: string; title: string; published_at: string}>
+  sponsorship: { impression_urls: string[]; tagline: string; sponsor: User } | null
+  topic_submissions: Record<string, {status: string; approved_on: string}>
   asset_type: string
   user: User
 }

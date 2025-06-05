@@ -85,8 +85,6 @@ export default function StepMember({ onPreview, context }: StepMemberProps) {
   const removeMember = (arrayHelpers: FieldArrayRenderProps, index: number) => {
     arrayHelpers.remove(index);
   }
-  console.log('StepMember', values);
-  
   return (
     <Form onSubmit={onSubmit}>
       <Box
@@ -173,7 +171,7 @@ export default function StepMember({ onPreview, context }: StepMemberProps) {
                                 color="secondary"
                                 fullWidth
                                 error={getError(`partners.${index}.members.${$index}.email`)}
-                                helperText={getHelperText(`partners.${index}.members.${$index}`)}
+                                helperText={getHelperText(`partners.${index}.members.${$index}.email`)}
                               />
                               <IconButton
                                 disabled={values.partners[index].members.length < 2}

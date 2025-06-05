@@ -85,10 +85,6 @@ export function showOpenFilePicker(options: InputFilePickerOptions = {}): Promis
       }
     });
 
-    input.addEventListener("cancel", () => {
-      reject(new Error("File selection was cancelled"));
-    });
-
     input.click();
   })
   .finally(() => {

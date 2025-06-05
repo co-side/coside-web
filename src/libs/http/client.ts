@@ -55,11 +55,13 @@ export function http(options: CreateHttpOptions = {}): HttpClient {
         return response
       } catch (error) {
         if (isAxiosError(error)) {
-          console.log('http client request error', {
-            url: error.config?.url,
-            status: error.status || error.response?.status,
-            message: error.message || error.code,
-          });
+          if (IS_DEV) {
+            console.log('http client request error', {
+              url: error.config?.url,
+              status: error.status || error.response?.status,
+              message: error.message || error.code,
+            });
+          }
           if (!isHttpError(error)) {
             throw new HttpError(error)
           }
@@ -119,8 +121,6 @@ export const defaultOptions = {
       }
     }
     catch (error: unknown) {
-      console.log('defaultOptions', error);
-      
       if (isHttpError(error) && error.response) {
         return {
           status: error.response.status,

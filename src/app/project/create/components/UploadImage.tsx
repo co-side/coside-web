@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import CachedIcon from "@mui/icons-material/Cached";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { showOpenFilePicker } from "../utils/showOpenFilePicker";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useStateController } from "../hooks/useStateController";
 
 interface UploadImageProps {
@@ -18,10 +18,17 @@ interface UploadImageProps {
 
 function UploadImage({ file: propsFile, onFileChange }: UploadImageProps) {
   const [file, setFile] = useStateController<File | null>(null, propsFile, onFileChange);
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+  useEffect(() => {
+    setPreviewImage(file ? URL.createObjectURL(file) : null)
+    return () => {
+      setPreviewImage(prev => {
+        if (prev) URL.revokeObjectURL(prev)
+        return null
+      });
+    }
+  }, [file]);
 
-  const previewImage = useMemo(() => {
-    return file ? URL.createObjectURL(file) : null;
-  }, [file])
   const [isHover, setIsHover] = useState(false);
   const onUploadSelector = async () => {
     const result = await showOpenFilePicker({
@@ -158,7 +165,16 @@ function UploadImage({ file: propsFile, onFileChange }: UploadImageProps) {
             variant="outlined"
             color="secondary"
             className={isHover ? "is-hover" : ""}
+            role="button"
+            tabIndex={0}
+            aria-label="Upload image file. Drag and drop or click to select. Maximum 5MB, PNG/JPG/JPEG format."
             onClick={onUploadSelector}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onUploadSelector();
+              }
+            }}
             onDragEnter={() => setIsHover(true)}
             onDragLeave={() => setIsHover(false)}
             onMouseEnter={() => setIsHover(true)}
