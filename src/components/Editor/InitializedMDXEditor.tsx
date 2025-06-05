@@ -20,28 +20,28 @@ import {
   InsertThematicBreak,
   linkDialogPlugin,
   type MDXEditorMethods,
+  type MDXEditorProps,
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
 
 // Define our props interface
-interface Props {
+export interface InitializedMDXEditorProps extends MDXEditorProps {
   editorRef?: React.Ref<MDXEditorMethods>;
-  markdown?: string;
-  onChange?: (markdown: string) => void;
-  [key: string]: any;
+  markdown: string;
+  onMarkdownChange?: (markdown: string) => void;
 }
 
 export default function InitializedMDXEditor({
   editorRef,
   markdown = "",
-  onChange,
+  onMarkdownChange,
   ...props
-}: Props) {
+}: InitializedMDXEditorProps) {
   return (
     <MDXEditor
       ref={editorRef}
       markdown={markdown}
-      onChange={onChange}
+      onChange={onMarkdownChange}
       plugins={[
         headingsPlugin(),
         listsPlugin(),
@@ -51,7 +51,6 @@ export default function InitializedMDXEditor({
         linkDialogPlugin(),
         imagePlugin({
           imageUploadHandler: async (image: File) => {
-            console.log("Uploading image:", image);
             await new Promise((resolve) => setTimeout(resolve, 1000));
             return URL.createObjectURL(image);
           },

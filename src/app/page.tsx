@@ -12,6 +12,13 @@ import {
 } from "@/services/project/getProjects";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { ProjectCard } from "@/components/ProjectCard";
+import BackToTopButton from "@/components/BackToTopButton";
+import RedirectAlert from "@/components/RedirectAlert";
+import FilterDropdownList, { FilterComponentProps } from "@/components/FilterDropdownList";
+
+import styles from "./page.module.css";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 import { useLoginDialog } from "@/contexts/LoginDialogContext";
 import { LoginDialog } from "@/components/Dialog/LoginDialog";
@@ -25,43 +32,14 @@ import styles from "./page.module.css";
 export default function Home() {
   const theme = useTheme();
   const { isLogin } = useAuth();
-  const { openState, closeDialog } = useLoginDialog();
   const { data: initProjects } = useGetProjectsFirstQuery();
   const [queryParams, setQueryParams] = useState<GetProjectsInfiniteQueryParams>({})
   const prevQueryParams = useRef<GetProjectsInfiniteQueryParams>({})
-  const { data: allProjects, hasNextPage, isFetched, fetchNextPage, refetch } = useGetProjectsInfiniteQuery(queryParams);
-  const nextPageElement = useRef<HTMLDivElement>(null)
-  const observerStateRef = useRef({ hasNext: hasNextPage, onNext: () => {} });
-
-  useEffect(() => {
-    observerStateRef.current.hasNext = hasNextPage
-    observerStateRef.current.onNext = () => {
-      fetchNextPage()
-    }
-  }, [isFetched, hasNextPage, fetchNextPage])
-
-  useEffect(() => {
-    const el = nextPageElement.current
-    if (!el) {
-      return
-    }
-    window.scrollTo(0, 0);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const { hasNext, onNext } = observerStateRef.current
-        entries.forEach(() => {
-          if (hasNext) onNext()
-        });
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => {
-      if (el) {
-        observer.unobserve(el);
-      }
-    };
-  }, [])
+  const { data: allProjects, hasNextPage, fetchNextPage, refetch } = useGetProjectsInfiniteQuery(queryParams);
+  const { ref: nextPageElement } = useIntersectionObserver({
+    onNext: () => fetchNextPage(),
+    hasNext: hasNextPage,
+  });
 
   useEffect(() => {
     if (JSON.stringify(prevQueryParams.current) === JSON.stringify(queryParams)) {
@@ -81,10 +59,8 @@ export default function Home() {
       return newQueryParams
     });
   }
-
   return (
     <main className={styles.main}>
-      <LoginDialog open={openState} onClose={closeDialog} />
       <Box
         sx={{
           maxWidth: "1224px",

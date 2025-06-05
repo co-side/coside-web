@@ -5,7 +5,8 @@ import { prefetchGetUser } from "@/services";
 import AuthErrorBoundary from "./AuthErrorBoundary";
 
 async function AuthServerProvider({ children }: { children?: React.ReactNode }) {
-  const accessToken = cookies().get('access_token')?.value
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get('access_token')?.value
   if (accessToken) {
     await Promise.all([
       prefetchGetUser()

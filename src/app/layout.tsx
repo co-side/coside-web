@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
-import { LoginDialogProvider } from "@/contexts/LoginDialogContext";
 
 import "./globals.css";
 import theme from "@/styles/theme";
@@ -26,19 +25,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className} style={{ position: "relative" }}>
-        <QueryClientProvider>
-          <TokenProvider>
-            <LoginDialogProvider>
-              <AppRouterCacheProvider>
-                <ThemeProvider theme={theme}>
-                  <Topbar />
-                  {children}
-                </ThemeProvider>
-              </AppRouterCacheProvider>
-            </LoginDialogProvider>
-          </TokenProvider>
-        </QueryClientProvider>
-      </body>
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>
+            <QueryClientProvider>
+              <TokenProvider>
+                <Topbar />
+                {children}
+              </TokenProvider>
+            </QueryClientProvider>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
+  </body>
     </html>
   );
 }

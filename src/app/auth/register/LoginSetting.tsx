@@ -143,7 +143,7 @@ function ProfileForm({
 
     setFieldValue("image", file);
     try {
-      const res = await fetchUpload({ signupToken, file })
+      const res = await fetchUpload({ token: signupToken, file })
       onImagePathChange(res.data);
       setFieldValue("imgPath", res.data);
 

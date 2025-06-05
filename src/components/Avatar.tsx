@@ -13,7 +13,6 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useLoginDialog } from "@/contexts/LoginDialogContext"; // 開啟登入 dialog
 import { LoginDialog } from "@/components/Dialog/LoginDialog"; // 登入 dialog
 import theme from "@/styles/theme";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -30,7 +29,13 @@ const Avatar = () => {
   
   const userInfo = userInfoResponse?.data;
 
-  const { openState, closeDialog, openDialog } = useLoginDialog(); // 呼叫登入對話框
+  const [openState, setOpen] = useState(false);
+  const openDialog = () => {
+    setOpen(true); 
+  };
+  const closeDialog = () => {
+    setOpen(false); 
+  };
   const router = useRouter();
   const isMobile = useMediaQuery('(max-width:900px)');
 

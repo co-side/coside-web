@@ -53,6 +53,8 @@ export const IS_SERVER = typeof window === 'undefined'
 
 export const ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60
 export const REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24
+export const CLIENT_ID = process.env.NEXT_PUBLIC_UNSPLASH_CLIENT_ID
+export const UNSPLASH_ROOT = 'https://api.unsplash.com'
 
 if (!PUBLIC_DOMAIN_URL) {
     throw new Error(`The PUBLIC_DOMAIN_URL is not fount.`)
