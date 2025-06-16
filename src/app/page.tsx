@@ -20,14 +20,6 @@ import FilterDropdownList, { FilterComponentProps } from "@/components/FilterDro
 import styles from "./page.module.css";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
-import { useLoginDialog } from "@/contexts/LoginDialogContext";
-import { LoginDialog } from "@/components/Dialog/LoginDialog";
-import { ProjectCard } from "@/components/ProjectCard";
-import BackToTopButton from "@/components/BackToTopButton";
-import RedirectAlert from "@/components/RedirectAlert";
-import FilterDropdownList, { FilterComponentProps } from "@/components/FilterDropdownList";
-
-import styles from "./page.module.css";
 
 export default function Home() {
   const theme = useTheme();
