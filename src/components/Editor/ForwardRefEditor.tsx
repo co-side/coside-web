@@ -1,10 +1,11 @@
 'use client'
-// ForwardRefEditor.tsx
+
 import dynamic from 'next/dynamic'
-import { forwardRef } from "react"
-import { type MDXEditorMethods, type MDXEditorProps} from '@mdxeditor/editor'
+import { ForwardedRef, forwardRef } from "react"
 import { styled } from "@mui/material/styles";
 import { FormControl, FormHelperText} from "@mui/material";
+import type { InitializedMDXEditorProps } from './InitializedMDXEditor'
+import type { MDXEditorMethods } from '@mdxeditor/editor';
 
 const Wrapper = styled("div")(({ theme }) => ({
   position: "relative",
@@ -32,20 +33,24 @@ const EditorComponent = dynamic(() => import('./InitializedMDXEditor'), {
 });
 
 // 修改這裡的類型定義，包含 label, helperText, error
-interface ForwardRefEditorProps extends MDXEditorProps {
+interface ForwardRefEditorProps extends InitializedMDXEditorProps {
   label?: string;
   helperText?: string;
   error?: boolean;
 }
 
-export const ForwardRefEditor = forwardRef<MDXEditorMethods, ForwardRefEditorProps>((props, ref) => (
-  <FormControl fullWidth={true} error={props.error}>
-    <Wrapper>
-      {props.label && <Label>{props.label}</Label>}
-      <EditorComponent {...props as any} editorRef={ref} />
-    </Wrapper>
-    {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
-  </FormControl>
-));
+function Editor(props: ForwardRefEditorProps, ref: ForwardedRef<MDXEditorMethods>) {
+  return (
+    <FormControl fullWidth={true} error={props.error}>
+      <Wrapper>
+        {props.label && <Label>{props.label}</Label>}
+        <EditorComponent {...props} editorRef={ref} />
+      </Wrapper>
+      {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
+    </FormControl>
+  )
+}
 
-ForwardRefEditor.displayName = 'ForwardRefEditor';
+const ForwardRefEditor = forwardRef(Editor);
+
+export default ForwardRefEditor

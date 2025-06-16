@@ -1,7 +1,7 @@
 import { queryOptions, useInfiniteQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import { projectClient as client } from '@/resources'
-// import { getQueryClient } from '@/libs/queryClient'
+import { getQueryClient } from '@/libs/queryClient'
 import { getProjects } from '@/resources/project/getProjects'
 
 type ApiResource = typeof getProjects
@@ -23,7 +23,7 @@ const fetchFn = async (req: GetProjectRequestDTO = {}): Promise<GetProjectsRespo
 const getQueryOptions = () => {
   return queryOptions({
     queryKey: GET_PROJECTS_QUERY,
-    queryFn: () => fetchFn(),
+    queryFn: () => fetchFn({ page: 1, size: 12 }),
   } as const)
 }
 
@@ -34,7 +34,7 @@ export const useGetProjectsFirstQuery = () => {
   })
 }
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 12
 
 export interface GetProjectsInfiniteQueryParams extends GetProjectRequestDTO {
   pageSize?: number
@@ -60,4 +60,10 @@ export const useGetProjectsInfiniteQuery = (req: GetProjectsInfiniteQueryParams 
       return res.pages.map((item) => item.data.projects).flat()
     },
   })
+}
+
+export const prefetchGetProjects = async (queryParams: GetProjectRequestDTO = {}) => {
+  const queryClient = getQueryClient()
+  await queryClient.prefetchQuery(getQueryOptions())
+  return fetchFn(queryParams)
 }
